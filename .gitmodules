@@ -1,0 +1,6 @@
+[submodule "upstreams/BungeeCord"]
+	path = upstreams/BungeeCord
+	url = https://github.com/SpigotMC/BungeeCord.git
+[submodule "upstreams/Waterfall"]
+	path = upstreams/Waterfall
+	url = https://github.com/PaperMC/Waterfall.git

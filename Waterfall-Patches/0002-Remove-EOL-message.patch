@@ -1,0 +1,22 @@
+From 46333d504a8072d7ab916b8b472651b11acb6ccd Mon Sep 17 00:00:00 2001
+From: Krakenied <Krakenied1@gmail.com>
+Date: Thu, 4 Apr 2024 19:19:47 +0200
+Subject: [PATCH] Remove EOL message
+
+
+diff --git a/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java b/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java
+index 72d6a15d..e95b67c7 100644
+--- a/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java
++++ b/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java
+@@ -64,7 +64,7 @@ public class BungeeCordLauncher
+         BungeeCord bungee = new BungeeCord();
+         ProxyServer.setInstance( bungee );
+         bungee.getLogger().info( "Enabled Waterfall version " + bungee.getVersion() );
+-        bungee.getLogger().warning("Waterfall has reached end of life and is no longer maintained. We recommend you transition to Velocity (https://papermc.io/software/velocity). For more information, see the announcement (https://forums.papermc.io/threads/1088/)."); // Waterfall - eol message
++        //bungee.getLogger().warning("Waterfall has reached end of life and is no longer maintained. We recommend you transition to Velocity (https://papermc.io/software/velocity). For more information, see the announcement (https://forums.papermc.io/threads/1088/)."); // Waterfall - eol message // Waterfall-Continued - remove EOL message
+         bungee.start();
+ 
+         if ( !options.has( "noconsole" ) )
+-- 
+2.44.0.windows.1
+
