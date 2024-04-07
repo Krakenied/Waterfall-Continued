@@ -1,6 +1,6 @@
-From 18971602db89c56323824927484e552566558d90 Mon Sep 17 00:00:00 2001
+From c56a5460fc33d03283cc21e834d9afb22bd23ee2 Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
-Date: Thu, 4 Apr 2024 19:35:58 +0200
+Date: Sun, 7 Apr 2024 23:43:01 +0200
 Subject: [PATCH] Waterfall changes
 
 MIT License
@@ -4427,7 +4427,7 @@ index cb5c30d5..3a69fced 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index af68f0c6..453ed42a 100644
+index 5be234d0..81def682 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 @@ -117,6 +117,16 @@ public class ProtocolConstants
