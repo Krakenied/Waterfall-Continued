@@ -1,4 +1,4 @@
-From 8c443e5cea6c0cd9fba0d7da5ab9d5b453a08d59 Mon Sep 17 00:00:00 2001
+From fdd98e9b617280695d82924daa5cf8d268b77f35 Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Sun, 7 Apr 2024 23:43:01 +0200
 Subject: [PATCH] Waterfall changes
@@ -3807,7 +3807,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/pom.xml b/pom.xml
-index 5ceacdd8..715d3e11 100644
+index 3ede436e..20b1a7cc 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -4427,7 +4427,7 @@ index cb5c30d5..3a69fced 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 5be234d0..81def682 100644
+index a676ce51..4bf248dc 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 @@ -117,6 +117,16 @@ public class ProtocolConstants
@@ -4784,7 +4784,7 @@ index 738f0c92..ec33d337 100644
 +    // Waterfall end
  }
 diff --git a/proxy/pom.xml b/proxy/pom.xml
-index 574e36c9..95703fee 100644
+index 3729633c..1786d303 100644
 --- a/proxy/pom.xml
 +++ b/proxy/pom.xml
 @@ -4,18 +4,18 @@
@@ -6597,7 +6597,7 @@ index 4684bfd8..3bca89be 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-index d9247fb2..0b5bee55 100644
+index 9965cf36..0821e7de 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 @@ -21,6 +21,8 @@ import javax.crypto.SecretKey;
@@ -6653,7 +6653,7 @@ index d9247fb2..0b5bee55 100644
          unsafe.sendPacket( ping );
          disconnect( "" );
      }
-@@ -376,7 +394,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -382,7 +400,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
              case 3:
                  transferred = handshake.getRequestedProtocol() == 3;
                  // Login
@@ -6665,7 +6665,7 @@ index d9247fb2..0b5bee55 100644
                  thisState = State.USERNAME;
                  ch.setProtocol( Protocol.LOGIN );
  
-@@ -416,6 +437,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -422,6 +443,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
          if ( BungeeCord.getInstance().config.isEnforceSecureProfile() && getVersion() < ProtocolConstants.MINECRAFT_1_19_3 )
          {
@@ -6673,7 +6673,7 @@ index d9247fb2..0b5bee55 100644
              PlayerPublicKey publicKey = loginRequest.getPublicKey();
              if ( publicKey == null )
              {
-@@ -493,8 +515,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -499,8 +521,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      {
          Preconditions.checkState( thisState == State.ENCRYPT, "Not expecting ENCRYPT" );
          Preconditions.checkState( EncryptionUtil.check( loginRequest.getPublicKey(), encryptResponse, request ), "Invalid verification" );
@@ -6691,7 +6691,7 @@ index d9247fb2..0b5bee55 100644
          BungeeCipher decrypt = EncryptionUtil.getCipher( false, sharedKey );
          ch.addBefore( PipelineUtils.FRAME_DECODER, PipelineUtils.DECRYPT_HANDLER, new CipherDecoder( decrypt ) );
          BungeeCipher encrypt = EncryptionUtil.getCipher( true, sharedKey );
-@@ -513,7 +544,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -519,7 +550,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          String encodedHash = URLEncoder.encode( new BigInteger( sha.digest() ).toString( 16 ), "UTF-8" );
  
          String preventProxy = ( BungeeCord.getInstance().config.isPreventProxyConnections() && getSocketAddress() instanceof InetSocketAddress ) ? "&ip=" + URLEncoder.encode( getAddress().getAddress().getHostAddress(), "UTF-8" ) : "";
@@ -6700,7 +6700,7 @@ index d9247fb2..0b5bee55 100644
  
          Callback<String> handler = new Callback<String>()
          {
-@@ -539,7 +570,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -545,7 +576,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
                  }
              }
          };
@@ -6709,7 +6709,7 @@ index d9247fb2..0b5bee55 100644
          HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
      }
  
-@@ -640,7 +671,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -646,7 +677,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          };
  
          // fire login event
@@ -6718,7 +6718,7 @@ index d9247fb2..0b5bee55 100644
      }
  
      private void finish2()
-@@ -788,26 +819,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -803,26 +834,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      @Override
      public String getUUID()
      {
@@ -6747,7 +6747,7 @@ index d9247fb2..0b5bee55 100644
      }
  
      @Override
-@@ -824,9 +842,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -839,9 +857,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
              for ( String id : content.split( "\0" ) )
              {
