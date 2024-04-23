@@ -1,4 +1,4 @@
-From a2c7c510f1dd0003e575f456d9e5817d0362b05c Mon Sep 17 00:00:00 2001
+From ace0caea9e96fc120993faede8372eaae3a201db Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Sun, 7 Apr 2024 23:43:01 +0200
 Subject: [PATCH] Waterfall changes
@@ -1681,7 +1681,7 @@ similarity index 100%
 rename from proxy/src/main/java/net/md_5/bungee/connection/LoginResult.java
 rename to api/src/main/java/net/md_5/bungee/connection/LoginResult.java
 diff --git a/bootstrap/pom.xml b/bootstrap/pom.xml
-index dae41e43..3dcff76f 100644
+index fa01eff2..88c261c6 100644
 --- a/bootstrap/pom.xml
 +++ b/bootstrap/pom.xml
 @@ -4,39 +4,40 @@
@@ -3773,7 +3773,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/pom.xml b/pom.xml
-index 66d1d9a1..b6f94260 100644
+index 463012be..a1cd1953 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -3972,7 +3972,7 @@ index 6f5acbc2..db62c340 100644
              <scope>compile</scope>
          </dependency>
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java b/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java
-index 7f0b6105..fe6c7339 100644
+index 422cba54..7f5935c3 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java
 @@ -268,4 +268,18 @@ public abstract class AbstractPacketHandler
@@ -4326,7 +4326,7 @@ index 237955ab..d0bd4d75 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-index bad7eb1e..1f36ad54 100644
+index 2271a2e5..67e0f085 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 @@ -2,6 +2,8 @@ package net.md_5.bungee.protocol;
@@ -4338,7 +4338,7 @@ index bad7eb1e..1f36ad54 100644
  import gnu.trove.map.TIntObjectMap;
  import gnu.trove.map.TObjectIntMap;
  import gnu.trove.map.hash.TIntObjectHashMap;
-@@ -543,6 +545,13 @@ public enum Protocol
+@@ -544,6 +546,13 @@ public enum Protocol
                      map( ProtocolConstants.MINECRAFT_1_19_1, 0x05 ),
                      map( ProtocolConstants.MINECRAFT_1_20_5, 0x06 )
              );
@@ -4352,7 +4352,7 @@ index bad7eb1e..1f36ad54 100644
              TO_SERVER.registerPacket(
                      TabCompleteRequest.class,
                      TabCompleteRequest::new,
-@@ -861,14 +870,23 @@ public enum Protocol
+@@ -862,14 +871,23 @@ public enum Protocol
              return protocol;
          }
  
@@ -4377,7 +4377,7 @@ index bad7eb1e..1f36ad54 100644
              {
                  throw new BadPacketException( "Packet with id " + id + " outside of range" );
              }
-@@ -933,9 +951,12 @@ public enum Protocol
+@@ -934,9 +952,12 @@ public enum Protocol
              {
                  throw new BadPacketException( "Unsupported protocol version" );
              }
@@ -4393,7 +4393,7 @@ index bad7eb1e..1f36ad54 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 9b3fb584..d723e8b5 100644
+index f6a2f1d6..6d212bf5 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 @@ -117,6 +117,16 @@ public class ProtocolConstants
@@ -4516,10 +4516,10 @@ index 00000000..08ecf2a3
 +    }
 +}
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java b/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
-index fb53ba74..f8e2db8d 100644
+index 887ff29f..d4700090 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
-@@ -118,4 +118,9 @@ public class ClientCommand extends DefinedPacket
+@@ -108,4 +108,9 @@ public class ClientCommand extends DefinedPacket
      {
          handler.handle( this );
      }
@@ -6728,7 +6728,7 @@ index 1d9a9ee5..f28576f6 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index 4dc0315f..777c54e4 100644
+index 5c1cf858..5d906716 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 @@ -51,6 +51,8 @@ public class UpstreamBridge extends PacketHandler
@@ -6749,7 +6749,7 @@ index 4dc0315f..777c54e4 100644
      }
  
      @Override
-     public void handle(ClientCommandSigned command) throws Exception
+     public void handle(UnsignedClientCommand command) throws Exception
      {
 -        handleChat( "/" + command.getCommand() );
 +        handleChat( "/" + command.getCommand(), null, command ); // Waterfall
