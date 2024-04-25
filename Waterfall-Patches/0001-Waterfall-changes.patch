@@ -1,6 +1,6 @@
-From 6c14c260c21671b14960cc7e3293d1f73573fecd Mon Sep 17 00:00:00 2001
+From 3b88886a0939be635b0050c260a22ad177d92555 Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
-Date: Wed, 24 Apr 2024 04:13:09 +0200
+Date: Thu, 25 Apr 2024 13:29:58 +0200
 Subject: [PATCH] Waterfall changes
 
 MIT License
@@ -1681,7 +1681,7 @@ similarity index 100%
 rename from proxy/src/main/java/net/md_5/bungee/connection/LoginResult.java
 rename to api/src/main/java/net/md_5/bungee/connection/LoginResult.java
 diff --git a/bootstrap/pom.xml b/bootstrap/pom.xml
-index fa01eff2..88c261c6 100644
+index 91061700..0cb96e7c 100644
 --- a/bootstrap/pom.xml
 +++ b/bootstrap/pom.xml
 @@ -4,39 +4,40 @@
