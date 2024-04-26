@@ -2,7 +2,7 @@
 
 git submodule update --init && ./scripts/applyPatches.sh || exit 1
 
-if [[ ! -z "${BUILD_NUMBER}"]]; then
+if [[ ! -z "${BUILD_NUMBER}" ]]; then
     build_number="${BUILD_NUMBER}"
 else
     build_number="unknown"
