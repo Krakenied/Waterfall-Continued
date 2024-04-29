@@ -1,4 +1,4 @@
-From 3bb1ce2059f848eef439cb44a029bfc99ad00c85 Mon Sep 17 00:00:00 2001
+From c9f37f4f7040dda9d8549bc1fcbd6a8387a6dac5 Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Fri, 26 Apr 2024 18:42:59 +0200
 Subject: [PATCH] Waterfall changes
@@ -6828,10 +6828,10 @@ index e8d5ed19..00e03bae 100644
          if ( compressionThreshold < 0 )
          {
 diff --git a/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java b/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java
-index 206f4227..954ffbc9 100644
+index 6caf30cd..75e802d2 100644
 --- a/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java
 +++ b/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java
-@@ -152,6 +152,14 @@ public class HandlerBoss extends ChannelInboundHandlerAdapter
+@@ -155,6 +155,14 @@ public class HandlerBoss extends ChannelInboundHandlerAdapter
                      ProxyServer.getInstance().getLogger().log( Level.WARNING, "{0} - read timed out", handler );
                  } else if ( cause instanceof DecoderException )
                  {
