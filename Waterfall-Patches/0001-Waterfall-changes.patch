@@ -1,6 +1,6 @@
-From c9f37f4f7040dda9d8549bc1fcbd6a8387a6dac5 Mon Sep 17 00:00:00 2001
+From fd178c0b88310b661d538a063bf56a184876ffe5 Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
-Date: Fri, 26 Apr 2024 18:42:59 +0200
+Date: Tue, 7 May 2024 22:59:32 +0200
 Subject: [PATCH] Waterfall changes
 
 MIT License
@@ -1812,10 +1812,10 @@ index 4239d5a1..3cfa8ac3 100644
      <dependencies>
          <dependency>
 diff --git a/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java b/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
-index 7e14484b..3698762c 100644
+index 2d8233e6..276322a8 100644
 --- a/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
 +++ b/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
-@@ -696,6 +696,26 @@ public class ComponentsTest
+@@ -673,6 +673,26 @@ public class ComponentsTest
          assertEquals( testClickEvent, extraGetter.apply( eventRetention, 1 ).getClickEvent() );
      }
  
@@ -1843,14 +1843,13 @@ index 7e14484b..3698762c 100644
      public void testLoopSimple()
      {
 diff --git a/chat/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java b/chat/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java
-index 47c06baa..2552a34f 100644
+index 995c70f2..dd9f040d 100644
 --- a/chat/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java
 +++ b/chat/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java
-@@ -25,4 +25,12 @@ public class TranslatableComponentTest
-         assertEquals( "Test string with a placeholder", BaseComponent.toPlainText( baseComponents ) );
-         assertEquals( "§fTest string with §fa§f placeholder", BaseComponent.toLegacyText( baseComponents ) );
+@@ -48,4 +48,11 @@ public class TranslatableComponentTest
+         assertEquals( "Buried Treasure Map", one_four_two.toPlainText() );
      }
-+
+ 
 +    @Test
 +    public void testEscapedPercentInPlainText()
 +    {
