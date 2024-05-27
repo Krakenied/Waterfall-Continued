@@ -1,4 +1,4 @@
-From fd178c0b88310b661d538a063bf56a184876ffe5 Mon Sep 17 00:00:00 2001
+From 98c398254d7ce61029069fb521c347630166a13e Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Tue, 7 May 2024 22:59:32 +0200
 Subject: [PATCH] Waterfall changes
@@ -3436,7 +3436,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/pom.xml b/pom.xml
-index 463012be..a1cd1953 100644
+index 03c222fb..98edfdee 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -3635,14 +3635,14 @@ index 6f5acbc2..db62c340 100644
              <scope>compile</scope>
          </dependency>
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java b/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java
-index 422cba54..7f5935c3 100644
+index 8d91211b..4dde7257 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java
-@@ -268,4 +268,18 @@ public abstract class AbstractPacketHandler
-     public void handle(CookieResponse cookieResponse) throws Exception
+@@ -278,4 +278,18 @@ public abstract class AbstractPacketHandler
+     public void handle(ServerLinks serverLinks) throws Exception
      {
      }
-+    
++
 +    // Waterfall start
 +    public void handle(net.md_5.bungee.protocol.packet.EntityEffect entityEffect) throws Exception
 +    {
@@ -3989,7 +3989,7 @@ index 237955ab..d0bd4d75 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-index 2271a2e5..67e0f085 100644
+index 317fb2d4..f25d3fab 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 @@ -2,6 +2,8 @@ package net.md_5.bungee.protocol;
@@ -4001,7 +4001,7 @@ index 2271a2e5..67e0f085 100644
  import gnu.trove.map.TIntObjectMap;
  import gnu.trove.map.TObjectIntMap;
  import gnu.trove.map.hash.TIntObjectHashMap;
-@@ -544,6 +546,13 @@ public enum Protocol
+@@ -556,6 +558,13 @@ public enum Protocol
                      map( ProtocolConstants.MINECRAFT_1_19_1, 0x05 ),
                      map( ProtocolConstants.MINECRAFT_1_20_5, 0x06 )
              );
@@ -4015,7 +4015,7 @@ index 2271a2e5..67e0f085 100644
              TO_SERVER.registerPacket(
                      TabCompleteRequest.class,
                      TabCompleteRequest::new,
-@@ -862,14 +871,23 @@ public enum Protocol
+@@ -884,14 +893,23 @@ public enum Protocol
              return protocol;
          }
  
@@ -4040,7 +4040,7 @@ index 2271a2e5..67e0f085 100644
              {
                  throw new BadPacketException( "Packet with id " + id + " outside of range" );
              }
-@@ -934,9 +952,12 @@ public enum Protocol
+@@ -956,9 +974,12 @@ public enum Protocol
              {
                  throw new BadPacketException( "Unsupported protocol version" );
              }
@@ -4056,10 +4056,10 @@ index 2271a2e5..67e0f085 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 40045b77..c6ad1f54 100644
+index 2b1487e0..79b298e3 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-@@ -118,6 +118,16 @@ public class ProtocolConstants
+@@ -119,6 +119,16 @@ public class ProtocolConstants
          SUPPORTED_VERSION_IDS = supportedVersionIds.build();
      }
  
@@ -6472,7 +6472,7 @@ index 5c1cf858..b482fe2e 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
-index 2bf92a03..cb4f1098 100644
+index 70b58fab..39eab669 100644
 --- a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 +++ b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 @@ -27,6 +27,11 @@ public abstract class EntityMap
@@ -6487,7 +6487,7 @@ index 2bf92a03..cb4f1098 100644
          switch ( version )
          {
              case ProtocolConstants.MINECRAFT_1_8:
-@@ -304,7 +309,13 @@ public abstract class EntityMap
+@@ -305,7 +310,13 @@ public abstract class EntityMap
                      DefinedPacket.readVarInt( packet );
                      break;
                  default:
@@ -6502,7 +6502,7 @@ index 2bf92a03..cb4f1098 100644
              }
          }
  
-@@ -342,6 +353,12 @@ public abstract class EntityMap
+@@ -343,6 +354,12 @@ public abstract class EntityMap
          int packetId = DefinedPacket.readVarInt( packet );
          int packetIdLength = packet.readerIndex() - readerIndex;
  
