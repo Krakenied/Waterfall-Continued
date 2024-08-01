@@ -1,4 +1,4 @@
-From 3f46960feb850080b1ff3a52c3bdd02c73d85d12 Mon Sep 17 00:00:00 2001
+From d00eb48f1bdf08088271964e269dbbb7677217e4 Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Wed, 26 Jun 2024 21:58:26 +0200
 Subject: [PATCH] Waterfall changes
@@ -4197,7 +4197,7 @@ index 00000000..08ecf2a3
 +    }
 +}
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java b/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
-index 887ff29f..d4700090 100644
+index 33c838f9..f259ee91 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
 @@ -108,4 +108,9 @@ public class ClientCommand extends DefinedPacket
@@ -5439,7 +5439,7 @@ index eabf7573..00000000
 -    }
 -}
 diff --git a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
-index d7359891..c0c523e3 100644
+index 95f6b156..da18d9f4 100644
 --- a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 +++ b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 @@ -7,6 +7,7 @@ import io.netty.buffer.ByteBufAllocator;
@@ -5577,7 +5577,7 @@ index d7359891..c0c523e3 100644
              user.unsafe().sendPacket( new Respawn( login.getDimension(), login.getWorldName(), login.getSeed(), login.getDifficulty(), login.getGameMode(), login.getPreviousGameMode(), login.getLevelType(), login.isDebug(), login.isFlat(),
                      (byte) 0, login.getDeathLocation(), login.getPortalCooldown() ) );
              if ( user.getPendingConnection().getVersion() >= ProtocolConstants.MINECRAFT_1_14 )
-@@ -408,7 +463,7 @@ public class ServerConnector extends PacketHandler
+@@ -407,7 +462,7 @@ public class ServerConnector extends PacketHandler
          ServerKickEvent event = new ServerKickEvent( user, target, new BaseComponent[]
          {
              kick.getMessage()
@@ -5586,7 +5586,7 @@ index d7359891..c0c523e3 100644
          if ( event.getKickReason().toLowerCase( Locale.ROOT ).contains( "outdated" ) && def != null )
          {
              // Pre cancel the event if we are going to try another server
-@@ -491,6 +546,6 @@ public class ServerConnector extends PacketHandler
+@@ -490,6 +545,6 @@ public class ServerConnector extends PacketHandler
      @Override
      public String toString()
      {
@@ -5595,7 +5595,7 @@ index d7359891..c0c523e3 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 41670a16..5fda0b3f 100644
+index 54842ca0..75040386 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -5713,7 +5713,7 @@ index 41670a16..5fda0b3f 100644
      }
  
      @Override
-@@ -801,4 +826,9 @@ public final class UserConnection implements ProxiedPlayer
+@@ -800,4 +825,9 @@ public final class UserConnection implements ProxiedPlayer
  
          unsafe().sendPacket( new Transfer( host, port ) );
      }
@@ -6012,7 +6012,7 @@ index 6967d4fc..a468c5c4 100644
 +    // Waterfall end
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java b/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
-index de85f0b2..f6b5e8b8 100644
+index d659a138..1de9875c 100644
 --- a/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
 +++ b/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
 @@ -47,10 +47,15 @@ public class YamlConfig implements ConfigurationAdapter
@@ -8291,5 +8291,5 @@ index 21a48df6..00000000
 -
 -}
 -- 
-2.44.0.windows.1
+2.45.1.windows.1
 
