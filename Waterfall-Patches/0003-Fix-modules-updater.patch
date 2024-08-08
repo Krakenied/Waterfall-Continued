@@ -1,15 +1,15 @@
-From 66d26f166b7d3668f762ff3005d027d24141e073 Mon Sep 17 00:00:00 2001
+From c3ebde06159667bbe851da32b8779994c3e4f05b Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Fri, 26 Apr 2024 18:36:53 +0200
 Subject: [PATCH] Fix modules updater
 
 
 diff --git a/proxy/src/main/java/net/md_5/bungee/module/JenkinsModuleSource.java b/proxy/src/main/java/net/md_5/bungee/module/JenkinsModuleSource.java
-index 5bb86152..1d056652 100644
+index 4110bdc3..8824ae19 100644
 --- a/proxy/src/main/java/net/md_5/bungee/module/JenkinsModuleSource.java
 +++ b/proxy/src/main/java/net/md_5/bungee/module/JenkinsModuleSource.java
-@@ -18,6 +18,9 @@ public class JenkinsModuleSource implements ModuleSource
-         System.out.println( "Attempting to Jenkins download module " + module.getName() + " v" + version.getBuild() );
+@@ -19,6 +19,9 @@ public class JenkinsModuleSource implements ModuleSource
+         ProxyServer.getInstance().getLogger().info( "Attempting to Jenkins download module " + module.getName() + " v" + version.getBuild() );
          try
          {
 +            // Waterfall-Continued start - fix modules updater
@@ -18,7 +18,7 @@ index 5bb86152..1d056652 100644
              final String url = String.format(
                  "https://api.papermc.io/v2/projects/%1$s/versions/%2$s/builds/%3$s/downloads/%4$s-%2$s-%3$s.jar",
                  "waterfall",
-@@ -26,6 +29,25 @@ public class JenkinsModuleSource implements ModuleSource
+@@ -27,6 +30,25 @@ public class JenkinsModuleSource implements ModuleSource
                  module.getName()
              );
              URL website = new URL( url );
@@ -45,5 +45,5 @@ index 5bb86152..1d056652 100644
              // 15 second timeout at various stages
              con.setConnectTimeout( 15000 );
 -- 
-2.44.0.windows.1
+2.45.1.windows.1
 

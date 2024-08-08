@@ -25,6 +25,9 @@ function updateWaterfallPatch {
     git fetch
     git branch -f upstream "$branch" >/dev/null
 
+    # Remove patches we don't want to maintain
+    rm "BungeeCord-Patches/0046-OSX-native-zlib-and-crypto.patch"
+
     # Apply Waterfall patches
     echo "Applying $waterfall_name patches..."
     ./waterfall p >/dev/null 2>&1
