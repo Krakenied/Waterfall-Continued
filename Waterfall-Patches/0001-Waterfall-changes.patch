@@ -1,4 +1,4 @@
-From 6480e23110588de5a2df71df35c301cc07a358e0 Mon Sep 17 00:00:00 2001
+From 4fa27f9e0f40566d3c10a2929085ed9554cfe629 Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Fri, 9 Aug 2024 00:18:08 +0200
 Subject: [PATCH] Waterfall changes
@@ -3216,7 +3216,7 @@ index 35712217..7c258140 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 9028dc13..73eff9ed 100644
+index 172a9a90..1604eb5b 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 @@ -122,6 +122,16 @@ public class ProtocolConstants
@@ -4581,7 +4581,7 @@ index eabf7573..00000000
 -    }
 -}
 diff --git a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
-index 82832865..d34e2b37 100644
+index 0f158a65..245e339b 100644
 --- a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 +++ b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 @@ -7,6 +7,7 @@ import io.netty.buffer.ByteBufAllocator;
@@ -4635,7 +4635,7 @@ index 82832865..d34e2b37 100644
              copiedHandshake.setHost( copiedHandshake.getHost() + user.getExtraDataInHandshake() );
          }
  
-@@ -209,6 +234,12 @@ public class ServerConnector extends PacketHandler
+@@ -218,6 +243,12 @@ public class ServerConnector extends PacketHandler
      public static void handleLogin(ProxyServer bungee, ChannelWrapper ch, UserConnection user, BungeeServerInfo target, ForgeServerHandler handshakeHandler, ServerConnection server, Login login) throws Exception
      {
          ServerConnectedEvent event = new ServerConnectedEvent( user, server );
@@ -4648,7 +4648,7 @@ index 82832865..d34e2b37 100644
          bungee.getPluginManager().callEvent( event );
  
          ch.write( BungeeCord.getInstance().registerChannels( user.getPendingConnection().getVersion() ) );
-@@ -233,7 +264,8 @@ public class ServerConnector extends PacketHandler
+@@ -242,7 +273,8 @@ public class ServerConnector extends PacketHandler
              ch.write( new PluginMessage( user.getPendingConnection().getVersion() >= ProtocolConstants.MINECRAFT_1_13 ? "minecraft:register" : "REGISTER", Joiner.on( "\0" ).join( registeredChannels ).getBytes( StandardCharsets.UTF_8 ), false ) );
          }
  
@@ -4658,7 +4658,7 @@ index 82832865..d34e2b37 100644
          {
              ch.write( user.getSettings() );
          }
-@@ -277,7 +309,7 @@ public class ServerConnector extends PacketHandler
+@@ -286,7 +318,7 @@ public class ServerConnector extends PacketHandler
  
                  ByteBuf brand = ByteBufAllocator.DEFAULT.heapBuffer();
                  DefinedPacket.writeString( bungee.getName() + " (" + bungee.getVersion() + ")", brand );
@@ -4667,7 +4667,7 @@ index 82832865..d34e2b37 100644
                  brand.release();
              }
  
-@@ -288,6 +320,7 @@ public class ServerConnector extends PacketHandler
+@@ -297,6 +329,7 @@ public class ServerConnector extends PacketHandler
              user.getTabListHandler().onServerChange();
  
              Scoreboard serverScoreboard = user.getServerSentScoreboard();
@@ -4675,7 +4675,7 @@ index 82832865..d34e2b37 100644
              for ( Objective objective : serverScoreboard.getObjectives() )
              {
                  user.unsafe().sendPacket( new ScoreboardObjective(
-@@ -311,6 +344,7 @@ public class ServerConnector extends PacketHandler
+@@ -320,6 +353,7 @@ public class ServerConnector extends PacketHandler
              {
                  user.unsafe().sendPacket( new net.md_5.bungee.protocol.packet.Team( team.getName() ) );
              }
@@ -4683,7 +4683,7 @@ index 82832865..d34e2b37 100644
              serverScoreboard.clear();
  
              for ( UUID bossbar : user.getSentBossBars() )
-@@ -329,13 +363,34 @@ public class ServerConnector extends PacketHandler
+@@ -338,13 +372,34 @@ public class ServerConnector extends PacketHandler
              }
  
              user.setDimensionChange( true );
@@ -4719,7 +4719,7 @@ index 82832865..d34e2b37 100644
              user.unsafe().sendPacket( new Respawn( login.getDimension(), login.getWorldName(), login.getSeed(), login.getDifficulty(), login.getGameMode(), login.getPreviousGameMode(), login.getLevelType(), login.isDebug(), login.isFlat(),
                      (byte) 0, login.getDeathLocation(), login.getPortalCooldown(), login.getSeaLevel() ) );
              if ( user.getPendingConnection().getVersion() >= ProtocolConstants.MINECRAFT_1_14 )
-@@ -407,7 +462,7 @@ public class ServerConnector extends PacketHandler
+@@ -419,7 +474,7 @@ public class ServerConnector extends PacketHandler
          ServerKickEvent event = new ServerKickEvent( user, target, new BaseComponent[]
          {
              kick.getMessage()
@@ -4728,7 +4728,7 @@ index 82832865..d34e2b37 100644
          if ( event.getKickReason().toLowerCase( Locale.ROOT ).contains( "outdated" ) && def != null )
          {
              // Pre cancel the event if we are going to try another server
-@@ -490,6 +545,6 @@ public class ServerConnector extends PacketHandler
+@@ -502,6 +557,6 @@ public class ServerConnector extends PacketHandler
      @Override
      public String toString()
      {
@@ -4737,7 +4737,7 @@ index 82832865..d34e2b37 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 54842ca0..75040386 100644
+index 2359e864..d6561c60 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -4802,7 +4802,7 @@ index 54842ca0..75040386 100644
          if ( callback != null )
          {
              // Convert the Callback<Boolean> to be compatible with Callback<Result> from ServerConnectRequest.
-@@ -331,7 +355,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -332,7 +356,7 @@ public final class UserConnection implements ProxiedPlayer
                  callback.done( ServerConnectRequest.Result.ALREADY_CONNECTED, null );
              }
  
@@ -4811,7 +4811,7 @@ index 54842ca0..75040386 100644
              return;
          }
          if ( pendingConnects.contains( target ) )
-@@ -341,7 +365,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -342,7 +366,7 @@ public final class UserConnection implements ProxiedPlayer
                  callback.done( ServerConnectRequest.Result.ALREADY_CONNECTING, null );
              }
  
@@ -4820,7 +4820,7 @@ index 54842ca0..75040386 100644
              return;
          }
  
-@@ -377,20 +401,20 @@ public final class UserConnection implements ProxiedPlayer
+@@ -378,20 +402,20 @@ public final class UserConnection implements ProxiedPlayer
                      ServerInfo def = updateAndGetNextServer( target );
                      if ( request.isRetry() && def != null && ( getServer() == null || def != getServer().getInfo() ) )
                      {
@@ -4845,7 +4845,7 @@ index 54842ca0..75040386 100644
                  .group( ch.getHandle().eventLoop() )
                  .handler( initializer )
                  .option( ChannelOption.CONNECT_TIMEOUT_MILLIS, request.getConnectTimeout() )
-@@ -405,7 +429,8 @@ public final class UserConnection implements ProxiedPlayer
+@@ -406,7 +430,8 @@ public final class UserConnection implements ProxiedPlayer
  
      private String connectionFailMessage(Throwable cause)
      {
@@ -4855,7 +4855,7 @@ index 54842ca0..75040386 100644
      }
  
      @Override
-@@ -800,4 +825,9 @@ public final class UserConnection implements ProxiedPlayer
+@@ -801,4 +826,9 @@ public final class UserConnection implements ProxiedPlayer
  
          unsafe().sendPacket( new Transfer( host, port ) );
      }
@@ -7419,5 +7419,5 @@ index 21a48df6..00000000
 -
 -}
 -- 
-2.45.1.windows.1
+2.45.2.windows.1
 
