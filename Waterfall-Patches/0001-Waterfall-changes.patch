@@ -1,4 +1,4 @@
-From 4fa27f9e0f40566d3c10a2929085ed9554cfe629 Mon Sep 17 00:00:00 2001
+From 67c74c925d655bb70a0c5b9807ee988798f74426 Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Fri, 9 Aug 2024 00:18:08 +0200
 Subject: [PATCH] Waterfall changes
@@ -3149,7 +3149,7 @@ index 237955ab..d0bd4d75 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-index 35712217..7c258140 100644
+index 8aa57ed4..fb239f75 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 @@ -2,6 +2,8 @@ package net.md_5.bungee.protocol;
@@ -3161,7 +3161,7 @@ index 35712217..7c258140 100644
  import gnu.trove.map.TIntObjectMap;
  import gnu.trove.map.TObjectIntMap;
  import gnu.trove.map.hash.TIntObjectHashMap;
-@@ -580,6 +582,13 @@ public enum Protocol
+@@ -584,6 +586,13 @@ public enum Protocol
                      map( ProtocolConstants.MINECRAFT_1_20_5, 0x06 ),
                      map( ProtocolConstants.MINECRAFT_1_21_2, 0x07 )
              );
@@ -3175,7 +3175,7 @@ index 35712217..7c258140 100644
              TO_SERVER.registerPacket(
                      TabCompleteRequest.class,
                      TabCompleteRequest::new,
-@@ -913,14 +922,23 @@ public enum Protocol
+@@ -917,14 +926,23 @@ public enum Protocol
              return protocol;
          }
  
@@ -3200,7 +3200,7 @@ index 35712217..7c258140 100644
              {
                  throw new BadPacketException( "Packet with id " + id + " outside of range" );
              }
-@@ -985,9 +1003,12 @@ public enum Protocol
+@@ -989,9 +1007,12 @@ public enum Protocol
              {
                  throw new BadPacketException( "Unsupported protocol version" );
              }
@@ -3216,7 +3216,7 @@ index 35712217..7c258140 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 172a9a90..1604eb5b 100644
+index a460d19e..7728ad8d 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 @@ -122,6 +122,16 @@ public class ProtocolConstants
@@ -4581,7 +4581,7 @@ index eabf7573..00000000
 -    }
 -}
 diff --git a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
-index 0f158a65..245e339b 100644
+index b58a01c6..cc5afa04 100644
 --- a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 +++ b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 @@ -7,6 +7,7 @@ import io.netty.buffer.ByteBufAllocator;
