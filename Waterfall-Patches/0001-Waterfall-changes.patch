@@ -1,4 +1,4 @@
-From 67c74c925d655bb70a0c5b9807ee988798f74426 Mon Sep 17 00:00:00 2001
+From 62b0349280879e9d0abddef384d9bb8553710506 Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Fri, 9 Aug 2024 00:18:08 +0200
 Subject: [PATCH] Waterfall changes
@@ -3216,10 +3216,10 @@ index 8aa57ed4..fb239f75 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index a460d19e..7728ad8d 100644
+index 86412d48..66609085 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-@@ -122,6 +122,16 @@ public class ProtocolConstants
+@@ -123,6 +123,16 @@ public class ProtocolConstants
          SUPPORTED_VERSION_IDS = supportedVersionIds.build();
      }
  
@@ -5551,7 +5551,7 @@ index 224f231b..185e63ad 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index 5c1cf858..b482fe2e 100644
+index c9e3697e..d509ce7e 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 @@ -51,6 +51,8 @@ public class UpstreamBridge extends PacketHandler
@@ -5563,7 +5563,7 @@ index 5c1cf858..b482fe2e 100644
      public UpstreamBridge(ProxyServer bungee, UserConnection con)
      {
          this.bungee = bungee;
-@@ -194,16 +196,22 @@ public class UpstreamBridge extends PacketHandler
+@@ -195,16 +197,22 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(ClientCommand command) throws Exception
      {
@@ -5588,7 +5588,7 @@ index 5c1cf858..b482fe2e 100644
      {
          for ( int index = 0, length = message.length(); index < length; index++ )
          {
-@@ -222,7 +230,13 @@ public class UpstreamBridge extends PacketHandler
+@@ -223,7 +231,13 @@ public class UpstreamBridge extends PacketHandler
              if ( !chatEvent.isCommand() || !bungee.getPluginManager().dispatchCommand( con, message.substring( 1 ) ) )
              {
                  return message;
@@ -5602,7 +5602,7 @@ index 5c1cf858..b482fe2e 100644
          }
          throw CancelSendSignal.INSTANCE;
      }
-@@ -230,6 +244,20 @@ public class UpstreamBridge extends PacketHandler
+@@ -231,6 +245,20 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(TabCompleteRequest tabComplete) throws Exception
      {
@@ -5623,7 +5623,7 @@ index 5c1cf858..b482fe2e 100644
          List<String> suggestions = new ArrayList<>();
          boolean isRegisteredCommand = false;
          boolean isCommand = tabComplete.getCursor().startsWith( "/" );
-@@ -380,6 +408,6 @@ public class UpstreamBridge extends PacketHandler
+@@ -381,6 +409,6 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public String toString()
      {
