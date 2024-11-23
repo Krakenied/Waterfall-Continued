@@ -1,4 +1,4 @@
-From 9606995a3d9a034184ebdc649d3d704d76bb18e5 Mon Sep 17 00:00:00 2001
+From 99767c77a412d88b87abe486c973699be86946ff Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Mon, 18 Nov 2024 23:14:19 +0100
 Subject: [PATCH] Waterfall changes
@@ -3742,7 +3742,7 @@ index 6c0ef4df..076ddd70 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java b/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
-index 6cd9e6a4..dafaba54 100644
+index f3f690c4..6b16c762 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
 @@ -47,6 +47,9 @@ public abstract class DefinedPacket
@@ -4111,10 +4111,10 @@ index 8aa57ed4..fb239f75 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 86412d48..66609085 100644
+index 93963ca3..606874e9 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-@@ -123,6 +123,16 @@ public class ProtocolConstants
+@@ -124,6 +124,16 @@ public class ProtocolConstants
          SUPPORTED_VERSION_IDS = supportedVersionIds.build();
      }
  
@@ -6235,7 +6235,7 @@ index d518d05f..213c130f 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-index 224f231b..185e63ad 100644
+index 2d365c39..1bbe6231 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 @@ -23,6 +23,8 @@ import javax.crypto.SecretKey;
@@ -6400,10 +6400,10 @@ index 224f231b..185e63ad 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index c9e3697e..d509ce7e 100644
+index 49967de9..e7f1be2f 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-@@ -51,6 +51,8 @@ public class UpstreamBridge extends PacketHandler
+@@ -52,6 +52,8 @@ public class UpstreamBridge extends PacketHandler
      private final ProxyServer bungee;
      private final UserConnection con;
  
@@ -6412,7 +6412,7 @@ index c9e3697e..d509ce7e 100644
      public UpstreamBridge(ProxyServer bungee, UserConnection con)
      {
          this.bungee = bungee;
-@@ -195,16 +197,22 @@ public class UpstreamBridge extends PacketHandler
+@@ -196,16 +198,22 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(ClientCommand command) throws Exception
      {
@@ -6437,7 +6437,7 @@ index c9e3697e..d509ce7e 100644
      {
          for ( int index = 0, length = message.length(); index < length; index++ )
          {
-@@ -223,7 +231,13 @@ public class UpstreamBridge extends PacketHandler
+@@ -224,7 +232,13 @@ public class UpstreamBridge extends PacketHandler
              if ( !chatEvent.isCommand() || !bungee.getPluginManager().dispatchCommand( con, message.substring( 1 ) ) )
              {
                  return message;
@@ -6451,7 +6451,7 @@ index c9e3697e..d509ce7e 100644
          }
          throw CancelSendSignal.INSTANCE;
      }
-@@ -231,6 +245,20 @@ public class UpstreamBridge extends PacketHandler
+@@ -232,6 +246,20 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(TabCompleteRequest tabComplete) throws Exception
      {
@@ -6472,7 +6472,7 @@ index c9e3697e..d509ce7e 100644
          List<String> suggestions = new ArrayList<>();
          boolean isRegisteredCommand = false;
          boolean isCommand = tabComplete.getCursor().startsWith( "/" );
-@@ -381,6 +409,6 @@ public class UpstreamBridge extends PacketHandler
+@@ -388,6 +416,6 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public String toString()
      {
@@ -6481,7 +6481,7 @@ index c9e3697e..d509ce7e 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
-index 755b8fd6..0f9f5957 100644
+index 206bc8d2..84a090b9 100644
 --- a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 +++ b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 @@ -27,6 +27,11 @@ public abstract class EntityMap
@@ -6496,7 +6496,7 @@ index 755b8fd6..0f9f5957 100644
          switch ( version )
          {
              case ProtocolConstants.MINECRAFT_1_8:
-@@ -307,7 +312,13 @@ public abstract class EntityMap
+@@ -309,7 +314,13 @@ public abstract class EntityMap
                      DefinedPacket.readVarInt( packet );
                      break;
                  default:
@@ -6511,7 +6511,7 @@ index 755b8fd6..0f9f5957 100644
              }
          }
  
-@@ -345,6 +356,12 @@ public abstract class EntityMap
+@@ -347,6 +358,12 @@ public abstract class EntityMap
          int packetId = DefinedPacket.readVarInt( packet );
          int packetIdLength = packet.readerIndex() - readerIndex;
  
