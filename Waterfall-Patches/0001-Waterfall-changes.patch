@@ -1,6 +1,6 @@
-From 99767c77a412d88b87abe486c973699be86946ff Mon Sep 17 00:00:00 2001
+From 011f8c256dac9e1601e44cbf6290ffe16e568176 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
-Date: Mon, 18 Nov 2024 23:14:19 +0100
+Date: Tue, 3 Dec 2024 19:25:31 +0100
 Subject: [PATCH] Waterfall changes
 
 MIT License
@@ -1782,7 +1782,7 @@ index 6be22739..a4516ed9 100644
              return;
          }
 diff --git a/chat/pom.xml b/chat/pom.xml
-index 71c4ce27..7db6020f 100644
+index 9a9bc506..b8c60c9f 100644
 --- a/chat/pom.xml
 +++ b/chat/pom.xml
 @@ -4,19 +4,19 @@
@@ -1859,7 +1859,7 @@ index 995c70f2..dd9f040d 100644
 +    }
  }
 diff --git a/config/pom.xml b/config/pom.xml
-index 4b94f112..d245a60b 100644
+index 58f0b7ca..10d1d4ca 100644
 --- a/config/pom.xml
 +++ b/config/pom.xml
 @@ -4,19 +4,19 @@
@@ -3491,7 +3491,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/pom.xml b/pom.xml
-index 7335e8b7..be640f9e 100644
+index 7a41e464..76bf6553 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -4111,10 +4111,10 @@ index 8aa57ed4..fb239f75 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 93963ca3..606874e9 100644
+index b3d1c2bb..ad9aa920 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-@@ -124,6 +124,16 @@ public class ProtocolConstants
+@@ -125,6 +125,16 @@ public class ProtocolConstants
          SUPPORTED_VERSION_IDS = supportedVersionIds.build();
      }
  
