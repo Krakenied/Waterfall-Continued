@@ -1,4 +1,4 @@
-From 011f8c256dac9e1601e44cbf6290ffe16e568176 Mon Sep 17 00:00:00 2001
+From ee35e0edcb4c101b9d652a2dc9217132e63db7ce Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 3 Dec 2024 19:25:31 +0100
 Subject: [PATCH] Waterfall changes
@@ -4248,10 +4248,10 @@ index 33c838f9..f259ee91 100644
 +    }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/packet/EncryptionResponse.java b/protocol/src/main/java/net/md_5/bungee/protocol/packet/EncryptionResponse.java
-index 63e9d18d..545eec72 100644
+index 1b911699..8244154d 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/packet/EncryptionResponse.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/packet/EncryptionResponse.java
-@@ -63,4 +63,17 @@ public class EncryptionResponse extends DefinedPacket
+@@ -67,4 +67,17 @@ public class EncryptionResponse extends DefinedPacket
          private final long salt;
          private final byte[] signature;
      }
