@@ -1,4 +1,4 @@
-From ee35e0edcb4c101b9d652a2dc9217132e63db7ce Mon Sep 17 00:00:00 2001
+From 71f5d9335555a6dfb63570068765c7ef6c029362 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 3 Dec 2024 19:25:31 +0100
 Subject: [PATCH] Waterfall changes
@@ -6794,17 +6794,17 @@ index 064639f3..6a6661a5 100644
              Files.write( ByteStreams.toByteArray( con.getInputStream() ), module.getFile() );
              ProxyServer.getInstance().getLogger().info( "Download complete" );
 diff --git a/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java b/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java
-index a15ba5df..032b06d4 100644
+index a7627d40..4b5f1401 100644
 --- a/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java
 +++ b/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java
-@@ -194,7 +194,7 @@ public class ChannelWrapper
+@@ -192,7 +192,7 @@ public class ChannelWrapper
  
-         if ( ch.pipeline().get( PacketDecompressor.class ) == null && compressionThreshold >= 0 )
-         {
--            addBefore( PipelineUtils.PACKET_DECODER, "decompress", new PacketDecompressor() );
-+            addBefore( PipelineUtils.PACKET_DECODER, "decompress", new PacketDecompressor(compressionThreshold) );
-         }
-         if ( compressionThreshold < 0 )
+             if ( decompressor == null )
+             {
+-                addBefore( PipelineUtils.PACKET_DECODER, "decompress", decompressor = new PacketDecompressor() );
++                addBefore( PipelineUtils.PACKET_DECODER, "decompress", decompressor = new PacketDecompressor(compressionThreshold) );
+             }
+         } else
          {
 diff --git a/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java b/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java
 index d82173b1..a96fb58e 100644
