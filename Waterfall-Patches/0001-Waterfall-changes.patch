@@ -1,4 +1,4 @@
-From 71f5d9335555a6dfb63570068765c7ef6c029362 Mon Sep 17 00:00:00 2001
+From 047bc7470b55db357bcabbf143d253f66630b5d2 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 3 Dec 2024 19:25:31 +0100
 Subject: [PATCH] Waterfall changes
@@ -4044,7 +4044,7 @@ index 237955ab..d0bd4d75 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-index 8aa57ed4..fb239f75 100644
+index 15bafe83..fb96ee7a 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 @@ -2,6 +2,8 @@ package net.md_5.bungee.protocol;
@@ -4056,7 +4056,7 @@ index 8aa57ed4..fb239f75 100644
  import gnu.trove.map.TIntObjectMap;
  import gnu.trove.map.TObjectIntMap;
  import gnu.trove.map.hash.TIntObjectHashMap;
-@@ -584,6 +586,13 @@ public enum Protocol
+@@ -613,6 +615,13 @@ public enum Protocol
                      map( ProtocolConstants.MINECRAFT_1_20_5, 0x06 ),
                      map( ProtocolConstants.MINECRAFT_1_21_2, 0x07 )
              );
@@ -4070,7 +4070,7 @@ index 8aa57ed4..fb239f75 100644
              TO_SERVER.registerPacket(
                      TabCompleteRequest.class,
                      TabCompleteRequest::new,
-@@ -917,14 +926,23 @@ public enum Protocol
+@@ -946,14 +955,23 @@ public enum Protocol
              return protocol;
          }
  
@@ -4095,7 +4095,7 @@ index 8aa57ed4..fb239f75 100644
              {
                  throw new BadPacketException( "Packet with id " + id + " outside of range" );
              }
-@@ -989,9 +1007,12 @@ public enum Protocol
+@@ -1018,9 +1036,12 @@ public enum Protocol
              {
                  throw new BadPacketException( "Unsupported protocol version" );
              }
@@ -4111,10 +4111,10 @@ index 8aa57ed4..fb239f75 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index b3d1c2bb..ad9aa920 100644
+index 6e8af8f3..01f7b19b 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-@@ -125,6 +125,16 @@ public class ProtocolConstants
+@@ -126,6 +126,16 @@ public class ProtocolConstants
          SUPPORTED_VERSION_IDS = supportedVersionIds.build();
      }
  
@@ -5831,7 +5831,7 @@ index 3e5ca394..00000000
 -    }
 -}
 diff --git a/proxy/src/main/java/net/md_5/bungee/compress/PacketDecompressor.java b/proxy/src/main/java/net/md_5/bungee/compress/PacketDecompressor.java
-index 445ee947..eaedf4bc 100644
+index 8e89d4b6..63b23318 100644
 --- a/proxy/src/main/java/net/md_5/bungee/compress/PacketDecompressor.java
 +++ b/proxy/src/main/java/net/md_5/bungee/compress/PacketDecompressor.java
 @@ -1,5 +1,7 @@
@@ -5842,25 +5842,25 @@ index 445ee947..eaedf4bc 100644
  import com.google.common.base.Preconditions;
  import io.netty.buffer.ByteBuf;
  import io.netty.channel.ChannelHandlerContext;
-@@ -8,9 +10,11 @@ import java.util.List;
- import net.md_5.bungee.jni.zlib.BungeeZlib;
+@@ -9,10 +11,12 @@ import net.md_5.bungee.jni.zlib.BungeeZlib;
  import net.md_5.bungee.protocol.DefinedPacket;
+ import net.md_5.bungee.protocol.OverflowPacketException;
  
 +@RequiredArgsConstructor
  public class PacketDecompressor extends MessageToMessageDecoder<ByteBuf>
  {
  
+     private static final int MAX_DECOMPRESSED_LEN = 1 << 23;
 +    private final int compressionThreshold;
      private final BungeeZlib zlib = CompressFactory.zlib.newInstance();
  
      @Override
-@@ -34,12 +38,13 @@ public class PacketDecompressor extends MessageToMessageDecoder<ByteBuf>
-             out.add( in.retain() );
-         } else
-         {
-+            Preconditions.checkArgument( size >= compressionThreshold, "Decompressed size %s less than compression threshold %s", size, compressionThreshold);
-             ByteBuf decompressed = ctx.alloc().directBuffer();
+@@ -41,11 +45,12 @@ public class PacketDecompressor extends MessageToMessageDecoder<ByteBuf>
+                 throw new OverflowPacketException( "Packet may not be larger than " + MAX_DECOMPRESSED_LEN + " bytes" );
+             }
  
++            Preconditions.checkArgument( size >= compressionThreshold, "Decompressed size %s less than compression threshold %s", size, compressionThreshold);
+             ByteBuf decompressed = ctx.alloc().directBuffer( size, size );
              try
              {
                  zlib.process( in, decompressed );
@@ -6235,7 +6235,7 @@ index d518d05f..213c130f 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-index 2d365c39..1bbe6231 100644
+index 472714b3..2aa12184 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 @@ -23,6 +23,8 @@ import javax.crypto.SecretKey;
@@ -6356,7 +6356,7 @@ index 2d365c39..1bbe6231 100644
      }
  
      private void finish2()
-@@ -823,26 +854,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -826,26 +857,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      @Override
      public String getUUID()
      {
@@ -6385,7 +6385,7 @@ index 2d365c39..1bbe6231 100644
      }
  
      @Override
-@@ -859,9 +877,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -862,9 +880,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
              for ( String id : content.split( "\0" ) )
              {
@@ -6400,7 +6400,7 @@ index 2d365c39..1bbe6231 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index 49967de9..e7f1be2f 100644
+index e508ad91..91b5255b 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 @@ -52,6 +52,8 @@ public class UpstreamBridge extends PacketHandler
@@ -6481,7 +6481,7 @@ index 49967de9..e7f1be2f 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
-index 206bc8d2..84a090b9 100644
+index c8fdb2e9..243acba6 100644
 --- a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 +++ b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 @@ -27,6 +27,11 @@ public abstract class EntityMap
@@ -6496,7 +6496,7 @@ index 206bc8d2..84a090b9 100644
          switch ( version )
          {
              case ProtocolConstants.MINECRAFT_1_8:
-@@ -309,7 +314,13 @@ public abstract class EntityMap
+@@ -311,7 +316,13 @@ public abstract class EntityMap
                      DefinedPacket.readVarInt( packet );
                      break;
                  default:
@@ -6511,7 +6511,7 @@ index 206bc8d2..84a090b9 100644
              }
          }
  
-@@ -347,6 +358,12 @@ public abstract class EntityMap
+@@ -349,6 +360,12 @@ public abstract class EntityMap
          int packetId = DefinedPacket.readVarInt( packet );
          int packetIdLength = packet.readerIndex() - readerIndex;
  
