@@ -1,4 +1,4 @@
-From 0f3fc13cae913b89b35951b71d1284a42a42d8af Mon Sep 17 00:00:00 2001
+From 7f9f1dbcb6797c22a11eb183a581da38d51617a1 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 3 Dec 2024 19:25:31 +0100
 Subject: [PATCH] Waterfall changes
@@ -3491,7 +3491,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/pom.xml b/pom.xml
-index 358e270e..4c5f4f66 100644
+index fb8077b8..e752d067 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -3615,7 +3615,7 @@ index 358e270e..4c5f4f66 100644
 +             <plugin>
                  <groupId>org.apache.maven.plugins</groupId>
                  <artifactId>maven-checkstyle-plugin</artifactId>
-                 <version>3.3.1</version>
+                 <version>3.6.0</version>
 @@ -179,6 +197,7 @@
                      </dependency>
                  </dependencies>
@@ -3624,7 +3624,7 @@ index 358e270e..4c5f4f66 100644
              <plugin>
                  <groupId>org.codehaus.mojo</groupId>
                  <artifactId>animal-sniffer-maven-plugin</artifactId>
-@@ -291,6 +310,15 @@
+@@ -300,6 +319,15 @@
                                  </goals>
                              </execution>
                          </executions>
@@ -3640,7 +3640,7 @@ index 358e270e..4c5f4f66 100644
                      </plugin>
                      <plugin>
                          <groupId>org.projectlombok</groupId>
-@@ -339,6 +367,7 @@
+@@ -348,6 +376,7 @@
                                      <!-- lombok does not add @return or @param which causes warnings, so ignore -->
                                      <doclint>none</doclint>
                                      <sourcepath>${project.build.directory}/delombok</sourcepath>
@@ -4111,7 +4111,7 @@ index 40fdb868..dce064d7 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 34fcb040..ac8a13e6 100644
+index 1d0de625..fb356a66 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 @@ -126,6 +126,16 @@ public class ProtocolConstants
@@ -6103,7 +6103,7 @@ index d659a138..1de9875c 100644
              SocketAddress address = Util.getAddr( addr );
              ServerInfo info = ProxyServer.getInstance().constructServerInfo( name, address, motd, restricted );
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
-index 97be9203..13b93d76 100644
+index 59b4e63c..73907301 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
 @@ -171,8 +171,14 @@ public class DownstreamBridge extends PacketHandler
@@ -6123,7 +6123,7 @@ index 97be9203..13b93d76 100644
      }
  
      @Override
-@@ -307,7 +313,6 @@ public class DownstreamBridge extends PacketHandler
+@@ -310,7 +316,6 @@ public class DownstreamBridge extends PacketHandler
      @SuppressWarnings("checkstyle:avoidnestedblocks")
      public void handle(PluginMessage pluginMessage) throws Exception
      {
@@ -6131,7 +6131,7 @@ index 97be9203..13b93d76 100644
          PluginMessageEvent event = new PluginMessageEvent( server, con, pluginMessage.getTag(), pluginMessage.getData().clone() );
  
          if ( bungee.getPluginManager().callEvent( event ).isCancelled() )
-@@ -324,8 +329,8 @@ public class DownstreamBridge extends PacketHandler
+@@ -327,8 +332,8 @@ public class DownstreamBridge extends PacketHandler
              Preconditions.checkState( !serverBrand.contains( bungee.getName() ), "Cannot connect proxy to itself!" );
  
              brand = ByteBufAllocator.DEFAULT.heapBuffer();
@@ -6142,7 +6142,7 @@ index 97be9203..13b93d76 100644
              brand.release();
              // changes in the packet are ignored so we need to send it manually
              con.unsafe().sendPacket( pluginMessage );
-@@ -334,6 +339,7 @@ public class DownstreamBridge extends PacketHandler
+@@ -337,6 +342,7 @@ public class DownstreamBridge extends PacketHandler
  
          if ( pluginMessage.getTag().equals( "BungeeCord" ) )
          {
@@ -6150,7 +6150,7 @@ index 97be9203..13b93d76 100644
              ByteArrayDataOutput out = ByteStreams.newDataOutput();
              String subChannel = in.readUTF();
  
-@@ -645,10 +651,14 @@ public class DownstreamBridge extends PacketHandler
+@@ -648,10 +654,14 @@ public class DownstreamBridge extends PacketHandler
      public void handle(Kick kick) throws Exception
      {
          ServerInfo def = con.updateAndGetNextServer( server.getInfo() );
@@ -6166,7 +6166,7 @@ index 97be9203..13b93d76 100644
          if ( event.isCancelled() && event.getCancelServer() != null )
          {
              con.connectNow( event.getCancelServer(), ServerConnectEvent.Reason.KICK_REDIRECT );
-@@ -746,6 +756,34 @@ public class DownstreamBridge extends PacketHandler
+@@ -749,6 +759,34 @@ public class DownstreamBridge extends PacketHandler
          }
      }
  
@@ -6201,7 +6201,7 @@ index 97be9203..13b93d76 100644
      @Override
      public void handle(Respawn respawn)
      {
-@@ -757,9 +795,25 @@ public class DownstreamBridge extends PacketHandler
+@@ -760,9 +798,25 @@ public class DownstreamBridge extends PacketHandler
      {
          boolean modified = false;
  
@@ -6229,7 +6229,7 @@ index 97be9203..13b93d76 100644
              {
                  CommandNode dummy = LiteralArgumentBuilder.literal( command.getKey() ).executes( DUMMY_COMMAND )
                          .then( RequiredArgumentBuilder.argument( "args", StringArgumentType.greedyString() )
-@@ -802,6 +856,6 @@ public class DownstreamBridge extends PacketHandler
+@@ -805,6 +859,6 @@ public class DownstreamBridge extends PacketHandler
      @Override
      public String toString()
      {
@@ -6238,10 +6238,10 @@ index 97be9203..13b93d76 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-index 472714b3..2aa12184 100644
+index 047e7129..dd0ec2c5 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-@@ -23,6 +23,8 @@ import javax.crypto.SecretKey;
+@@ -24,6 +24,8 @@ import javax.crypto.SecretKey;
  import lombok.AllArgsConstructor;
  import lombok.Data;
  import lombok.EqualsAndHashCode;
@@ -6250,7 +6250,7 @@ index 472714b3..2aa12184 100644
  import lombok.Getter;
  import lombok.RequiredArgsConstructor;
  import lombok.ToString;
-@@ -85,6 +87,8 @@ import net.md_5.bungee.util.QuietException;
+@@ -86,6 +88,8 @@ import net.md_5.bungee.util.QuietException;
  public class InitialHandler extends PacketHandler implements PendingConnection
  {
  
@@ -6259,7 +6259,7 @@ index 472714b3..2aa12184 100644
      private final BungeeCord bungee;
      private ChannelWrapper ch;
      @Getter
-@@ -190,7 +194,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -191,7 +195,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      @Override
      public void handle(PluginMessage pluginMessage) throws Exception
      {
@@ -6278,7 +6278,7 @@ index 472714b3..2aa12184 100644
      }
  
      @Override
-@@ -333,10 +347,14 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -329,10 +343,14 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          thisState = State.PING;
      }
  
@@ -6294,7 +6294,7 @@ index 472714b3..2aa12184 100644
          unsafe.sendPacket( ping );
          disconnect( "" );
      }
-@@ -392,7 +410,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -388,7 +406,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
              case 3:
                  transferred = handshake.getRequestedProtocol() == 3;
                  // Login
@@ -6306,7 +6306,7 @@ index 472714b3..2aa12184 100644
                  thisState = State.USERNAME;
                  ch.setProtocol( Protocol.LOGIN );
  
-@@ -432,6 +453,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -428,6 +449,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
          if ( BungeeCord.getInstance().config.isEnforceSecureProfile() && getVersion() < ProtocolConstants.MINECRAFT_1_19_3 )
          {
@@ -6314,7 +6314,7 @@ index 472714b3..2aa12184 100644
              PlayerPublicKey publicKey = loginRequest.getPublicKey();
              if ( publicKey == null )
              {
-@@ -509,8 +531,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -501,8 +523,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      {
          Preconditions.checkState( thisState == State.ENCRYPT, "Not expecting ENCRYPT" );
          Preconditions.checkState( EncryptionUtil.check( loginRequest.getPublicKey(), encryptResponse, request ), "Invalid verification" );
@@ -6332,7 +6332,7 @@ index 472714b3..2aa12184 100644
          BungeeCipher decrypt = EncryptionUtil.getCipher( false, sharedKey );
          ch.addBefore( PipelineUtils.FRAME_DECODER, PipelineUtils.DECRYPT_HANDLER, new CipherDecoder( decrypt ) );
          BungeeCipher encrypt = EncryptionUtil.getCipher( true, sharedKey );
-@@ -531,7 +562,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -523,7 +554,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          String encodedHash = URLEncoder.encode( new BigInteger( sha.digest() ).toString( 16 ), "UTF-8" );
  
          String preventProxy = ( BungeeCord.getInstance().config.isPreventProxyConnections() && getSocketAddress() instanceof InetSocketAddress ) ? "&ip=" + URLEncoder.encode( getAddress().getAddress().getHostAddress(), "UTF-8" ) : "";
@@ -6341,7 +6341,7 @@ index 472714b3..2aa12184 100644
  
          Callback<String> handler = new Callback<String>()
          {
-@@ -557,7 +588,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -549,7 +580,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
                  }
              }
          };
@@ -6350,16 +6350,16 @@ index 472714b3..2aa12184 100644
          HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
      }
  
-@@ -649,7 +680,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -627,7 +658,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          };
  
          // fire login event
--        bungee.getPluginManager().callEvent( new LoginEvent( InitialHandler.this, complete ) );
-+        bungee.getPluginManager().callEvent( new LoginEvent( InitialHandler.this, complete, this.getLoginProfile() ) ); // Waterfall: Parse LoginResult object to new constructor of LoginEvent
+-        bungee.getPluginManager().callEvent( new LoginEvent( InitialHandler.this, eventLoopCallback( complete ) ) );
++        bungee.getPluginManager().callEvent( new LoginEvent( InitialHandler.this, eventLoopCallback( complete ), this.getLoginProfile() ) ); // Waterfall: Parse LoginResult object to new constructor of LoginEvent
      }
  
      private void finish2()
-@@ -826,26 +857,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -798,26 +829,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      @Override
      public String getUUID()
      {
@@ -6388,7 +6388,7 @@ index 472714b3..2aa12184 100644
      }
  
      @Override
-@@ -862,9 +880,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -834,9 +852,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
              for ( String id : content.split( "\0" ) )
              {
