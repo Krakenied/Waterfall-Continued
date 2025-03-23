@@ -1,4 +1,4 @@
-From 31ee519362639346e2a12f0a9f0d8d378cc06511 Mon Sep 17 00:00:00 2001
+From 4157d5ac71921471311edaf0a0ed6bc2a6013a4b Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 25 Feb 2025 20:25:09 +0100
 Subject: [PATCH] Waterfall changes
@@ -4111,7 +4111,7 @@ index 40fdb868..dce064d7 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 050c017c..52442e28 100644
+index fcb0f2da..2fefd827 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 @@ -126,6 +126,16 @@ public class ProtocolConstants
@@ -4234,10 +4234,10 @@ index 00000000..08ecf2a3
 +    }
 +}
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java b/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
-index 33c838f9..f259ee91 100644
+index f86fcd08..40df53fe 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
-@@ -108,4 +108,9 @@ public class ClientCommand extends DefinedPacket
+@@ -119,4 +119,9 @@ public class ClientCommand extends DefinedPacket
      {
          handler.handle( this );
      }
@@ -5634,7 +5634,7 @@ index 8f52c50e..0b82fee9 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 6d661494..867c4d4d 100644
+index 74ca0ac4..ea53cf42 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -5658,7 +5658,7 @@ index 6d661494..867c4d4d 100644
      @Getter
      @Setter
      private String lastCommandTabbed;
-@@ -169,9 +175,12 @@ public final class UserConnection implements ProxiedPlayer
+@@ -181,9 +187,12 @@ public final class UserConnection implements ProxiedPlayer
  
          forgeClientHandler = new ForgeClientHandler( this );
  
@@ -5673,7 +5673,7 @@ index 6d661494..867c4d4d 100644
          return BungeeCord.getInstance().addConnection( this );
      }
  
-@@ -292,9 +301,24 @@ public final class UserConnection implements ProxiedPlayer
+@@ -306,9 +315,24 @@ public final class UserConnection implements ProxiedPlayer
  
      public void connect(ServerInfo info, final Callback<Boolean> callback, final boolean retry, ServerConnectEvent.Reason reason)
      {
@@ -5699,7 +5699,7 @@ index 6d661494..867c4d4d 100644
          if ( callback != null )
          {
              // Convert the Callback<Boolean> to be compatible with Callback<Result> from ServerConnectRequest.
-@@ -342,7 +366,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -356,7 +380,7 @@ public final class UserConnection implements ProxiedPlayer
                  callback.done( ServerConnectRequest.Result.ALREADY_CONNECTED, null );
              }
  
@@ -5708,7 +5708,7 @@ index 6d661494..867c4d4d 100644
              return;
          }
          if ( pendingConnects.contains( target ) )
-@@ -352,7 +376,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -366,7 +390,7 @@ public final class UserConnection implements ProxiedPlayer
                  callback.done( ServerConnectRequest.Result.ALREADY_CONNECTING, null );
              }
  
@@ -5717,7 +5717,7 @@ index 6d661494..867c4d4d 100644
              return;
          }
  
-@@ -377,14 +401,14 @@ public final class UserConnection implements ProxiedPlayer
+@@ -391,14 +415,14 @@ public final class UserConnection implements ProxiedPlayer
                      ServerInfo def = updateAndGetNextServer( target );
                      if ( request.isRetry() && def != null && ( getServer() == null || def != getServer().getInfo() ) )
                      {
@@ -5735,7 +5735,7 @@ index 6d661494..867c4d4d 100644
                      }
                  } else
                  {
-@@ -393,7 +417,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -407,7 +431,7 @@ public final class UserConnection implements ProxiedPlayer
              }
          };
          Bootstrap b = new Bootstrap()
@@ -5744,7 +5744,7 @@ index 6d661494..867c4d4d 100644
                  .group( ch.getHandle().eventLoop() )
                  .handler( bungee.unsafe().getBackendChannelInitializer().getChannelInitializer() )
                  .option( ChannelOption.CONNECT_TIMEOUT_MILLIS, request.getConnectTimeout() )
-@@ -408,7 +432,8 @@ public final class UserConnection implements ProxiedPlayer
+@@ -422,7 +446,8 @@ public final class UserConnection implements ProxiedPlayer
  
      private String connectionFailMessage(Throwable cause)
      {
@@ -5754,7 +5754,7 @@ index 6d661494..867c4d4d 100644
      }
  
      @Override
-@@ -803,4 +828,9 @@ public final class UserConnection implements ProxiedPlayer
+@@ -817,4 +842,9 @@ public final class UserConnection implements ProxiedPlayer
  
          unsafe().sendPacket( new Transfer( host, port ) );
      }
@@ -6245,7 +6245,7 @@ index 64e9a764..399b4e7d 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-index a048d5a3..220f035e 100644
+index 6fef2696..e18d288a 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 @@ -24,6 +24,8 @@ import javax.crypto.SecretKey;
@@ -6274,26 +6274,7 @@ index a048d5a3..220f035e 100644
      private final BungeeCord bungee;
      private ChannelWrapper ch;
      @Getter
-@@ -191,7 +196,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
-     @Override
-     public void handle(PluginMessage pluginMessage) throws Exception
-     {
--        this.relayMessage( pluginMessage );
-+        // Waterfall start
-+        try {
-+            this.relayMessage(pluginMessage);
-+        } catch (IllegalStateException | IllegalArgumentException ex) {
-+            if (net.md_5.bungee.protocol.MinecraftDecoder.DEBUG) {
-+                throw ex;
-+            } else {
-+                throw new QuietException(ex.getMessage());
-+            }
-+        }
-+        // Waterfall end
-     }
- 
-     @Override
-@@ -329,10 +344,14 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -329,10 +334,14 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          thisState = State.PING;
      }
  
@@ -6309,7 +6290,7 @@ index a048d5a3..220f035e 100644
          unsafe.sendPacket( ping );
          disconnect( "" );
      }
-@@ -388,7 +407,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -388,7 +397,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
              case 3:
                  transferred = handshake.getRequestedProtocol() == 3;
                  // Login
@@ -6321,7 +6302,7 @@ index a048d5a3..220f035e 100644
                  thisState = State.USERNAME;
                  ch.setProtocol( Protocol.LOGIN );
  
-@@ -428,6 +450,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -428,6 +440,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
          if ( BungeeCord.getInstance().config.isEnforceSecureProfile() && getVersion() < ProtocolConstants.MINECRAFT_1_19_3 )
          {
@@ -6329,7 +6310,7 @@ index a048d5a3..220f035e 100644
              PlayerPublicKey publicKey = loginRequest.getPublicKey();
              if ( publicKey == null )
              {
-@@ -501,8 +524,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -501,8 +514,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      {
          Preconditions.checkState( thisState == State.ENCRYPT, "Not expecting ENCRYPT" );
          Preconditions.checkState( EncryptionUtil.check( loginRequest.getPublicKey(), encryptResponse, request ), "Invalid verification" );
@@ -6347,7 +6328,7 @@ index a048d5a3..220f035e 100644
          BungeeCipher decrypt = EncryptionUtil.getCipher( false, sharedKey );
          ch.addBefore( PipelineUtils.FRAME_DECODER, PipelineUtils.DECRYPT_HANDLER, new CipherDecoder( decrypt ) );
          BungeeCipher encrypt = EncryptionUtil.getCipher( true, sharedKey );
-@@ -523,7 +555,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -523,7 +545,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          String encodedHash = URLEncoder.encode( new BigInteger( sha.digest() ).toString( 16 ), "UTF-8" );
  
          String preventProxy = ( BungeeCord.getInstance().config.isPreventProxyConnections() && getSocketAddress() instanceof InetSocketAddress ) ? "&ip=" + URLEncoder.encode( getAddress().getAddress().getHostAddress(), "UTF-8" ) : "";
@@ -6356,7 +6337,7 @@ index a048d5a3..220f035e 100644
  
          Callback<String> handler = new Callback<String>()
          {
-@@ -549,7 +581,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -549,7 +571,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
                  }
              }
          };
@@ -6365,7 +6346,7 @@ index a048d5a3..220f035e 100644
          HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
      }
  
-@@ -627,7 +659,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -627,7 +649,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          };
  
          // fire login event
@@ -6374,7 +6355,7 @@ index a048d5a3..220f035e 100644
      }
  
      private void finish2()
-@@ -798,26 +830,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -798,26 +820,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      @Override
      public String getUUID()
      {
@@ -6403,7 +6384,7 @@ index a048d5a3..220f035e 100644
      }
  
      @Override
-@@ -834,9 +853,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -834,9 +843,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
              for ( String id : content.split( "\0" ) )
              {
@@ -6418,7 +6399,7 @@ index a048d5a3..220f035e 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index 89ce8a5f..3aa97849 100644
+index ce975957..3e583f51 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 @@ -52,6 +52,8 @@ public class UpstreamBridge extends PacketHandler
@@ -6813,10 +6794,10 @@ index 064639f3..6a6661a5 100644
              Files.write( ByteStreams.toByteArray( con.getInputStream() ), module.getFile() );
              ProxyServer.getInstance().getLogger().info( "Download complete" );
 diff --git a/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java b/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java
-index a3c6c8c4..909941d9 100644
+index cdad6d9e..f19e0cd8 100644
 --- a/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java
 +++ b/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java
-@@ -190,7 +190,7 @@ public class ChannelWrapper
+@@ -196,7 +196,7 @@ public class ChannelWrapper
  
              if ( decompressor == null )
              {
@@ -6826,11 +6807,11 @@ index a3c6c8c4..909941d9 100644
          } else
          {
 diff --git a/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java b/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java
-index a73a29c7..0e2b0172 100644
+index 684654d2..925cc346 100644
 --- a/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java
 +++ b/proxy/src/main/java/net/md_5/bungee/netty/HandlerBoss.java
-@@ -178,6 +178,14 @@ public class HandlerBoss extends ChannelInboundHandlerAdapter
-                     ProxyServer.getInstance().getLogger().log( Level.WARNING, "{0} - read timed out", handler );
+@@ -182,6 +182,14 @@ public class HandlerBoss extends ChannelInboundHandlerAdapter
+                     ProxyServer.getInstance().getLogger().log( Level.WARNING, "{0} - write timed out", handler );
                  } else if ( cause instanceof DecoderException )
                  {
 +                    // Waterfall start
@@ -6845,7 +6826,7 @@ index a73a29c7..0e2b0172 100644
                      {
                          ProxyServer.getInstance().getLogger().log( Level.WARNING, "{0} - corrupted frame: {1}", new Object[]
 diff --git a/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java b/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java
-index 2934cdef..b318deab 100644
+index d9536149..1899bd75 100644
 --- a/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java
 +++ b/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java
 @@ -1,9 +1,12 @@
@@ -6861,7 +6842,7 @@ index 2934cdef..b318deab 100644
  import io.netty.channel.ChannelOption;
  import io.netty.channel.EventLoopGroup;
  import io.netty.channel.ServerChannel;
-@@ -55,7 +58,7 @@ import net.md_5.bungee.util.PacketLimiter;
+@@ -56,7 +59,7 @@ import net.md_5.bungee.util.PacketLimiter;
  public class PipelineUtils
  {
  
@@ -6870,7 +6851,7 @@ index 2934cdef..b318deab 100644
  
      private static void setChannelInitializerHolders()
      {
-@@ -74,8 +77,23 @@ public class PipelineUtils
+@@ -75,8 +78,23 @@ public class PipelineUtils
              {
                  return false;
              }
@@ -6895,7 +6876,7 @@ index 2934cdef..b318deab 100644
              ch.pipeline().addBefore( FRAME_DECODER, LEGACY_DECODER, new LegacyDecoder() );
              ch.pipeline().addAfter( FRAME_DECODER, PACKET_DECODER, new MinecraftDecoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
              ch.pipeline().addAfter( FRAME_PREPENDER_AND_COMPRESS, PACKET_ENCODER, new MinecraftEncoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
-@@ -94,6 +112,10 @@ public class PipelineUtils
+@@ -95,6 +113,10 @@ public class PipelineUtils
              {
                  ch.pipeline().addFirst( new HAProxyMessageDecoder() );
              }
@@ -6906,7 +6887,7 @@ index 2934cdef..b318deab 100644
  
              return true;
          } ) );
-@@ -126,6 +148,12 @@ public class PipelineUtils
+@@ -128,6 +150,12 @@ public class PipelineUtils
  
      private static boolean epoll;
      private static boolean io_uring;
@@ -6919,7 +6900,7 @@ index 2934cdef..b318deab 100644
  
      static
      {
-@@ -158,6 +186,12 @@ public class PipelineUtils
+@@ -160,6 +188,12 @@ public class PipelineUtils
          }
  
          setChannelInitializerHolders();
@@ -6932,7 +6913,7 @@ index 2934cdef..b318deab 100644
      }
  
      public static EventLoopGroup newEventLoopGroup(int threads, ThreadFactory factory)
-@@ -189,6 +223,34 @@ public class PipelineUtils
+@@ -191,6 +225,34 @@ public class PipelineUtils
          return io_uring ? IOUringSocketChannel.class : epoll ? EpollSocketChannel.class : NioSocketChannel.class;
      }
  
@@ -6967,7 +6948,7 @@ index 2934cdef..b318deab 100644
      public static Class<? extends DatagramChannel> getDatagramChannel()
      {
          return io_uring ? IOUringDatagramChannel.class : epoll ? EpollDatagramChannel.class : NioDatagramChannel.class;
-@@ -215,6 +277,7 @@ public class PipelineUtils
+@@ -217,6 +279,7 @@ public class PipelineUtils
              {
                  // IP_TOS is not supported (Windows XP / Windows Server 2003)
              }
