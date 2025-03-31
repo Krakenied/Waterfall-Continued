@@ -1,4 +1,4 @@
-From 352ceb224059fcb5b16bba02d090d281f059bfb5 Mon Sep 17 00:00:00 2001
+From f2912483351dd1b7e1247e083351dd96612f9d39 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 25 Feb 2025 20:25:09 +0100
 Subject: [PATCH] Waterfall changes
@@ -5478,7 +5478,7 @@ index eabf7573..00000000
 -    }
 -}
 diff --git a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
-index 5583a1b3..fa63fd09 100644
+index 5583a1b3..bce4c4e7 100644
 --- a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 +++ b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 @@ -7,6 +7,7 @@ import io.netty.buffer.ByteBufAllocator;
@@ -5499,7 +5499,6 @@ index 5583a1b3..fa63fd09 100644
 +
              if ( profile != null && profile.getProperties() != null && profile.getProperties().length > 0 )
              {
--                newHost += "\00" + LoginResult.GSON.toJson( profile.getProperties() );
 +                properties = profile.getProperties();
 +            }
 +
@@ -5520,7 +5519,7 @@ index 5583a1b3..fa63fd09 100644
 +
 +            // If we touched any properties, then append them
 +            if (properties.length > 0) {
-+                newHost += "\00" + BungeeCord.getInstance().gson.toJson(properties);
+                 newHost += "\00" + LoginResult.GSON.toJson( profile.getProperties() );
              }
 +
              copiedHandshake.setHost( newHost );
