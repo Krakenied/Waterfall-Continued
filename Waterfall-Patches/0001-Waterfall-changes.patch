@@ -1,4 +1,4 @@
-From f2912483351dd1b7e1247e083351dd96612f9d39 Mon Sep 17 00:00:00 2001
+From cfb390f3220cf2a4adb58bc223428483a8f7fe25 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 25 Feb 2025 20:25:09 +0100
 Subject: [PATCH] Waterfall changes
@@ -3491,7 +3491,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/pom.xml b/pom.xml
-index d0e41248..44c3a4b5 100644
+index 0af145e1..dfcebb8c 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -4470,7 +4470,7 @@ index 738f0c92..ec33d337 100644
 +    // Waterfall end
  }
 diff --git a/proxy/pom.xml b/proxy/pom.xml
-index 4ebc721a..4134bf71 100644
+index fdb3a2f0..fac2e818 100644
 --- a/proxy/pom.xml
 +++ b/proxy/pom.xml
 @@ -4,18 +4,18 @@
@@ -4517,7 +4517,7 @@ index 4ebc721a..4134bf71 100644
              <groupId>io.netty</groupId>
              <artifactId>netty-handler</artifactId>
 @@ -64,41 +76,42 @@
-             <classifier>linux-aarch_64</classifier>
+             <scope>compile</scope>
          </dependency>
          <dependency>
 -            <groupId>net.md-5</groupId>
@@ -5633,7 +5633,7 @@ index 5583a1b3..bce4c4e7 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 2c9f55c9..23b9e123 100644
+index 84ca1eae..971593f4 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -6244,10 +6244,10 @@ index 10f7ba99..c638637d 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-index 7c0c2a02..acac1ab6 100644
+index e4c92ef7..ab2b55f3 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-@@ -24,6 +24,8 @@ import javax.crypto.SecretKey;
+@@ -23,6 +23,8 @@ import javax.crypto.SecretKey;
  import lombok.AllArgsConstructor;
  import lombok.Data;
  import lombok.EqualsAndHashCode;
@@ -6256,7 +6256,7 @@ index 7c0c2a02..acac1ab6 100644
  import lombok.Getter;
  import lombok.RequiredArgsConstructor;
  import lombok.ToString;
-@@ -48,6 +50,7 @@ import net.md_5.bungee.api.event.PostLoginEvent;
+@@ -47,6 +49,7 @@ import net.md_5.bungee.api.event.PostLoginEvent;
  import net.md_5.bungee.api.event.PreLoginEvent;
  import net.md_5.bungee.api.event.ProxyPingEvent;
  import net.md_5.bungee.api.event.ServerConnectEvent;
@@ -6264,7 +6264,7 @@ index 7c0c2a02..acac1ab6 100644
  import net.md_5.bungee.http.HttpClient;
  import net.md_5.bungee.jni.cipher.BungeeCipher;
  import net.md_5.bungee.netty.ChannelWrapper;
-@@ -86,6 +89,8 @@ import net.md_5.bungee.util.QuietException;
+@@ -85,6 +88,8 @@ import net.md_5.bungee.util.QuietException;
  public class InitialHandler extends PacketHandler implements PendingConnection
  {
  
@@ -6273,8 +6273,8 @@ index 7c0c2a02..acac1ab6 100644
      private final BungeeCord bungee;
      private ChannelWrapper ch;
      @Getter
-@@ -329,10 +334,14 @@ public class InitialHandler extends PacketHandler implements PendingConnection
-         thisState = State.PING;
+@@ -324,10 +329,14 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+         }
      }
  
 +    private static final boolean ACCEPT_INVALID_PACKETS = Boolean.parseBoolean(System.getProperty("waterfall.acceptInvalidPackets", "false"));
@@ -6288,8 +6288,8 @@ index 7c0c2a02..acac1ab6 100644
 +        }
          unsafe.sendPacket( ping );
          disconnect( "" );
-     }
-@@ -388,7 +397,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+         if ( bungee.getConnectionThrottle() != null )
+@@ -387,7 +396,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
              case 3:
                  transferred = handshake.getRequestedProtocol() == 3;
                  // Login
@@ -6301,7 +6301,7 @@ index 7c0c2a02..acac1ab6 100644
                  thisState = State.USERNAME;
                  ch.setProtocol( Protocol.LOGIN );
  
-@@ -428,6 +440,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -427,6 +439,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
          if ( BungeeCord.getInstance().config.isEnforceSecureProfile() && getVersion() < ProtocolConstants.MINECRAFT_1_19_3 )
          {
@@ -6309,7 +6309,7 @@ index 7c0c2a02..acac1ab6 100644
              PlayerPublicKey publicKey = loginRequest.getPublicKey();
              if ( publicKey == null )
              {
-@@ -501,8 +514,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -500,8 +513,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      {
          Preconditions.checkState( thisState == State.ENCRYPT, "Not expecting ENCRYPT" );
          Preconditions.checkState( EncryptionUtil.check( loginRequest.getPublicKey(), encryptResponse, request ), "Invalid verification" );
@@ -6327,7 +6327,7 @@ index 7c0c2a02..acac1ab6 100644
          BungeeCipher decrypt = EncryptionUtil.getCipher( false, sharedKey );
          ch.addBefore( PipelineUtils.FRAME_DECODER, PipelineUtils.DECRYPT_HANDLER, new CipherDecoder( decrypt ) );
          BungeeCipher encrypt = EncryptionUtil.getCipher( true, sharedKey );
-@@ -523,7 +545,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -522,7 +544,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          String encodedHash = URLEncoder.encode( new BigInteger( sha.digest() ).toString( 16 ), "UTF-8" );
  
          String preventProxy = ( BungeeCord.getInstance().config.isPreventProxyConnections() && getSocketAddress() instanceof InetSocketAddress ) ? "&ip=" + URLEncoder.encode( getAddress().getAddress().getHostAddress(), "UTF-8" ) : "";
@@ -6336,7 +6336,7 @@ index 7c0c2a02..acac1ab6 100644
  
          Callback<String> handler = new Callback<String>()
          {
-@@ -549,7 +571,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -548,7 +570,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
                  }
              }
          };
@@ -6345,7 +6345,7 @@ index 7c0c2a02..acac1ab6 100644
          HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
      }
  
-@@ -627,7 +649,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -626,7 +648,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          };
  
          // fire login event
@@ -6354,7 +6354,7 @@ index 7c0c2a02..acac1ab6 100644
      }
  
      private void finish2()
-@@ -798,26 +820,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -797,26 +819,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      @Override
      public String getUUID()
      {
@@ -6383,7 +6383,7 @@ index 7c0c2a02..acac1ab6 100644
      }
  
      @Override
-@@ -834,9 +843,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -833,9 +842,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
              for ( String id : content.split( "\0" ) )
              {
@@ -6793,7 +6793,7 @@ index 064639f3..6a6661a5 100644
              Files.write( ByteStreams.toByteArray( con.getInputStream() ), module.getFile() );
              ProxyServer.getInstance().getLogger().info( "Download complete" );
 diff --git a/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java b/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java
-index cdad6d9e..f19e0cd8 100644
+index 94ec569b..7abe0a29 100644
 --- a/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java
 +++ b/proxy/src/main/java/net/md_5/bungee/netty/ChannelWrapper.java
 @@ -196,7 +196,7 @@ public class ChannelWrapper
@@ -6825,7 +6825,7 @@ index 684654d2..925cc346 100644
                      {
                          ProxyServer.getInstance().getLogger().log( Level.WARNING, "{0} - corrupted frame: {1}", new Object[]
 diff --git a/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java b/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java
-index d9536149..1899bd75 100644
+index 21664e76..1f70c951 100644
 --- a/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java
 +++ b/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java
 @@ -1,9 +1,12 @@
@@ -6840,8 +6840,8 @@ index d9536149..1899bd75 100644
 +import io.netty.channel.ChannelInitializer;
  import io.netty.channel.ChannelOption;
  import io.netty.channel.EventLoopGroup;
- import io.netty.channel.ServerChannel;
-@@ -56,7 +59,7 @@ import net.md_5.bungee.util.PacketLimiter;
+ import io.netty.channel.MultiThreadIoEventLoopGroup;
+@@ -57,7 +60,7 @@ import net.md_5.bungee.util.PacketLimiter;
  public class PipelineUtils
  {
  
@@ -6850,7 +6850,7 @@ index d9536149..1899bd75 100644
  
      private static void setChannelInitializerHolders()
      {
-@@ -75,8 +78,23 @@ public class PipelineUtils
+@@ -76,8 +79,23 @@ public class PipelineUtils
              {
                  return false;
              }
@@ -6875,7 +6875,7 @@ index d9536149..1899bd75 100644
              ch.pipeline().addBefore( FRAME_DECODER, LEGACY_DECODER, new LegacyDecoder() );
              ch.pipeline().addAfter( FRAME_DECODER, PACKET_DECODER, new MinecraftDecoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
              ch.pipeline().addAfter( FRAME_PREPENDER_AND_COMPRESS, PACKET_ENCODER, new MinecraftEncoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
-@@ -95,6 +113,10 @@ public class PipelineUtils
+@@ -96,6 +114,10 @@ public class PipelineUtils
              {
                  ch.pipeline().addFirst( new HAProxyMessageDecoder() );
              }
@@ -6886,7 +6886,7 @@ index d9536149..1899bd75 100644
  
              return true;
          } ) );
-@@ -128,6 +150,12 @@ public class PipelineUtils
+@@ -129,6 +151,12 @@ public class PipelineUtils
  
      private static boolean epoll;
      private static boolean io_uring;
@@ -6899,21 +6899,21 @@ index d9536149..1899bd75 100644
  
      static
      {
-@@ -160,6 +188,12 @@ public class PipelineUtils
+@@ -162,6 +190,12 @@ public class PipelineUtils
          }
  
          setChannelInitializerHolders();
 +        // Waterfall start: netty reflection -> factory
-+        serverChannelFactory = io_uring ? IOUringServerSocketChannel::new : epoll ? EpollServerSocketChannel::new : NioServerSocketChannel::new;
-+        serverChannelDomainFactory = io_uring ? IOUringServerSocketChannel::new : epoll ? EpollServerDomainSocketChannel::new : null;
-+        channelFactory = io_uring ? IOUringSocketChannel::new : epoll ? EpollSocketChannel::new : NioSocketChannel::new;
-+        channelDomainFactory = io_uring ? IOUringSocketChannel::new : epoll ? EpollDomainSocketChannel::new : null;
++        serverChannelFactory = io_uring ? IoUringServerSocketChannel::new : epoll ? EpollServerSocketChannel::new : NioServerSocketChannel::new;
++        serverChannelDomainFactory = io_uring ? IoUringServerSocketChannel::new : epoll ? EpollServerDomainSocketChannel::new : null;
++        channelFactory = io_uring ? IoUringSocketChannel::new : epoll ? EpollSocketChannel::new : NioSocketChannel::new;
++        channelDomainFactory = io_uring ? IoUringSocketChannel::new : epoll ? EpollDomainSocketChannel::new : null;
 +        // Waterfall end
      }
  
      public static EventLoopGroup newEventLoopGroup(int threads, ThreadFactory factory)
-@@ -191,6 +225,34 @@ public class PipelineUtils
-         return io_uring ? IOUringSocketChannel.class : epoll ? EpollSocketChannel.class : NioSocketChannel.class;
+@@ -193,6 +227,34 @@ public class PipelineUtils
+         return io_uring ? IoUringSocketChannel.class : epoll ? EpollSocketChannel.class : NioSocketChannel.class;
      }
  
 +    // Waterfall start: netty reflection -> factory
@@ -6946,11 +6946,11 @@ index d9536149..1899bd75 100644
 +
      public static Class<? extends DatagramChannel> getDatagramChannel()
      {
-         return io_uring ? IOUringDatagramChannel.class : epoll ? EpollDatagramChannel.class : NioDatagramChannel.class;
-@@ -217,6 +279,7 @@ public class PipelineUtils
-             {
-                 // IP_TOS is not supported (Windows XP / Windows Server 2003)
+         return io_uring ? IoUringDatagramChannel.class : epoll ? EpollDatagramChannel.class : NioDatagramChannel.class;
+@@ -221,6 +283,7 @@ public class PipelineUtils
              }
+             // https://github.com/netty/netty/wiki/Netty-4.2-Migration-Guide
+             // TODO: check for AdaptiveByteBufAllocator
 +            ch.config().setOption( ChannelOption.TCP_NODELAY, true );
              ch.config().setAllocator( PooledByteBufAllocator.DEFAULT );
              ch.config().setWriteBufferWaterMark( MARK );
