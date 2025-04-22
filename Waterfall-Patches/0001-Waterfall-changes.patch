@@ -1,4 +1,4 @@
-From cfb390f3220cf2a4adb58bc223428483a8f7fe25 Mon Sep 17 00:00:00 2001
+From 3dd839dc2ebfa401db5da70545699fad69049a09 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 25 Feb 2025 20:25:09 +0100
 Subject: [PATCH] Waterfall changes
@@ -1311,7 +1311,7 @@ index e582808f..29cd91dd 100644
      }
  
 diff --git a/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java b/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java
-index 0fe647b8..32af4937 100644
+index 17dd8694..5f71c316 100644
 --- a/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java
 +++ b/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java
 @@ -128,6 +128,38 @@ public interface ProxiedPlayer extends Connection, CommandSender
@@ -3857,7 +3857,7 @@ index 00000000..334d5054
 +    }
 +}
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/MinecraftDecoder.java b/protocol/src/main/java/net/md_5/bungee/protocol/MinecraftDecoder.java
-index d79d5e5c..3a4a735c 100644
+index abcb53bb..44f4f02a 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/MinecraftDecoder.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/MinecraftDecoder.java
 @@ -1,7 +1,9 @@
@@ -3870,25 +3870,24 @@ index d79d5e5c..3a4a735c 100644
  import io.netty.handler.codec.MessageToMessageDecoder;
  import java.util.List;
  import lombok.AllArgsConstructor;
-@@ -18,6 +20,14 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
-     private final boolean server;
+@@ -23,6 +25,13 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
      @Setter
      private int protocolVersion;
+     private boolean copyBuffer;
 +    @Setter
-+    private boolean supportsForge = false;
++    private boolean supportsForge;
 +
-+    public MinecraftDecoder(Protocol protocol, boolean server, int protocolVersion) {
-+        this.protocol = protocol;
-+        this.server = server;
-+        this.protocolVersion = protocolVersion;
++    public MinecraftDecoder(Protocol protocol, boolean server, int protocolVersion, boolean copyBuffer )
++    {
++        this( protocol, server, protocolVersion, copyBuffer, false );
 +    }
  
      @Override
      protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception
-@@ -32,17 +42,32 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
-         Protocol.DirectionData prot = ( server ) ? protocol.TO_SERVER : protocol.TO_CLIENT;
-         ByteBuf slice = in.copy(); // Can't slice this one due to EntityMap :(
+@@ -36,17 +45,32 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
  
+         Protocol.DirectionData prot = ( server ) ? protocol.TO_SERVER : protocol.TO_CLIENT;
+         ByteBuf slice = ( copyBuffer ) ? in.copy() : in.retainedSlice();
 +        Object packetTypeInfo = null;
          try
          {
@@ -3919,7 +3918,7 @@ index d79d5e5c..3a4a735c 100644
                      throw new BadPacketException( "Packet " + protocol + ":" + prot.getDirection() + "/" + packetId + " (" + packet.getClass().getSimpleName() + ") larger than expected, extra bytes: " + in.readableBytes() );
                  }
              } else
-@@ -52,6 +77,36 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
+@@ -56,6 +80,36 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
  
              out.add( new PacketWrapper( packet, slice, protocol ) );
              slice = null;
@@ -3956,9 +3955,9 @@ index d79d5e5c..3a4a735c 100644
          } finally
          {
              if ( slice != null )
-@@ -60,4 +115,52 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
-             }
-         }
+@@ -77,4 +131,52 @@ public class MinecraftDecoder extends MessageToMessageDecoder<ByteBuf>
+         // EntityMap is removed for 1.20.2 and up
+         return protocol == Protocol.GAME && protocolVersion < ProtocolConstants.MINECRAFT_1_20_2;
      }
 +
 +    // Waterfall start: Additional DoS mitigations, courtesy of Velocity
@@ -5633,7 +5632,7 @@ index 5583a1b3..bce4c4e7 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 84ca1eae..971593f4 100644
+index 35e59709..20dba78c 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -5753,7 +5752,7 @@ index 84ca1eae..971593f4 100644
      }
  
      @Override
-@@ -821,4 +846,9 @@ public final class UserConnection implements ProxiedPlayer
+@@ -826,4 +851,9 @@ public final class UserConnection implements ProxiedPlayer
  
          unsafe().sendPacket( new Transfer( host, port ) );
      }
@@ -6109,10 +6108,10 @@ index 95781e33..915cfeda 100644
              SocketAddress address = Util.getAddr( addr );
              ServerInfo info = ProxyServer.getInstance().constructServerInfo( name, address, motd, restricted );
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
-index 10f7ba99..c638637d 100644
+index 71470345..a0242037 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
-@@ -170,8 +170,14 @@ public class DownstreamBridge extends PacketHandler
+@@ -171,8 +171,14 @@ public class DownstreamBridge extends PacketHandler
      @Override
      public void handle(PlayerListItem playerList) throws Exception
      {
@@ -6129,7 +6128,7 @@ index 10f7ba99..c638637d 100644
      }
  
      @Override
-@@ -309,7 +315,6 @@ public class DownstreamBridge extends PacketHandler
+@@ -310,7 +316,6 @@ public class DownstreamBridge extends PacketHandler
      @SuppressWarnings("checkstyle:avoidnestedblocks")
      public void handle(PluginMessage pluginMessage) throws Exception
      {
@@ -6137,7 +6136,7 @@ index 10f7ba99..c638637d 100644
          PluginMessageEvent event = new PluginMessageEvent( server, con, pluginMessage.getTag(), pluginMessage.getData().clone() );
  
          if ( bungee.getPluginManager().callEvent( event ).isCancelled() )
-@@ -326,8 +331,8 @@ public class DownstreamBridge extends PacketHandler
+@@ -327,8 +332,8 @@ public class DownstreamBridge extends PacketHandler
              Preconditions.checkState( !serverBrand.contains( bungee.getName() ), "Cannot connect proxy to itself!" );
  
              brand = ByteBufAllocator.DEFAULT.heapBuffer();
@@ -6148,7 +6147,7 @@ index 10f7ba99..c638637d 100644
              brand.release();
              // changes in the packet are ignored so we need to send it manually
              con.unsafe().sendPacket( pluginMessage );
-@@ -336,6 +341,7 @@ public class DownstreamBridge extends PacketHandler
+@@ -337,6 +342,7 @@ public class DownstreamBridge extends PacketHandler
  
          if ( pluginMessage.getTag().equals( PluginMessage.BUNGEE_CHANNEL_LEGACY ) )
          {
@@ -6156,7 +6155,7 @@ index 10f7ba99..c638637d 100644
              ByteArrayDataOutput out = ByteStreams.newDataOutput();
              String subChannel = in.readUTF();
  
-@@ -647,10 +653,14 @@ public class DownstreamBridge extends PacketHandler
+@@ -648,10 +654,14 @@ public class DownstreamBridge extends PacketHandler
      public void handle(Kick kick) throws Exception
      {
          ServerInfo def = con.updateAndGetNextServer( server.getInfo() );
@@ -6172,7 +6171,7 @@ index 10f7ba99..c638637d 100644
          if ( event.isCancelled() && event.getCancelServer() != null )
          {
              con.connectNow( event.getCancelServer(), ServerConnectEvent.Reason.KICK_REDIRECT );
-@@ -748,6 +758,34 @@ public class DownstreamBridge extends PacketHandler
+@@ -749,6 +759,34 @@ public class DownstreamBridge extends PacketHandler
          }
      }
  
@@ -6207,7 +6206,7 @@ index 10f7ba99..c638637d 100644
      @Override
      public void handle(Respawn respawn)
      {
-@@ -759,9 +797,25 @@ public class DownstreamBridge extends PacketHandler
+@@ -760,9 +798,25 @@ public class DownstreamBridge extends PacketHandler
      {
          boolean modified = false;
  
@@ -6235,7 +6234,7 @@ index 10f7ba99..c638637d 100644
              {
                  CommandNode dummy = LiteralArgumentBuilder.literal( command.getKey() ).executes( DUMMY_COMMAND )
                          .then( RequiredArgumentBuilder.argument( "args", StringArgumentType.greedyString() )
-@@ -804,6 +858,6 @@ public class DownstreamBridge extends PacketHandler
+@@ -815,6 +869,6 @@ public class DownstreamBridge extends PacketHandler
      @Override
      public String toString()
      {
@@ -6244,10 +6243,10 @@ index 10f7ba99..c638637d 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-index e4c92ef7..ab2b55f3 100644
+index fa1f2bef..8d7fb51d 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-@@ -23,6 +23,8 @@ import javax.crypto.SecretKey;
+@@ -24,6 +24,8 @@ import javax.crypto.SecretKey;
  import lombok.AllArgsConstructor;
  import lombok.Data;
  import lombok.EqualsAndHashCode;
@@ -6256,7 +6255,7 @@ index e4c92ef7..ab2b55f3 100644
  import lombok.Getter;
  import lombok.RequiredArgsConstructor;
  import lombok.ToString;
-@@ -47,6 +49,7 @@ import net.md_5.bungee.api.event.PostLoginEvent;
+@@ -48,6 +50,7 @@ import net.md_5.bungee.api.event.PostLoginEvent;
  import net.md_5.bungee.api.event.PreLoginEvent;
  import net.md_5.bungee.api.event.ProxyPingEvent;
  import net.md_5.bungee.api.event.ServerConnectEvent;
@@ -6264,7 +6263,7 @@ index e4c92ef7..ab2b55f3 100644
  import net.md_5.bungee.http.HttpClient;
  import net.md_5.bungee.jni.cipher.BungeeCipher;
  import net.md_5.bungee.netty.ChannelWrapper;
-@@ -85,6 +88,8 @@ import net.md_5.bungee.util.QuietException;
+@@ -86,6 +89,8 @@ import net.md_5.bungee.util.QuietException;
  public class InitialHandler extends PacketHandler implements PendingConnection
  {
  
@@ -6273,7 +6272,7 @@ index e4c92ef7..ab2b55f3 100644
      private final BungeeCord bungee;
      private ChannelWrapper ch;
      @Getter
-@@ -324,10 +329,14 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -327,10 +332,14 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          }
      }
  
@@ -6289,7 +6288,7 @@ index e4c92ef7..ab2b55f3 100644
          unsafe.sendPacket( ping );
          disconnect( "" );
          if ( bungee.getConnectionThrottle() != null )
-@@ -387,7 +396,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -390,7 +399,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
              case 3:
                  transferred = handshake.getRequestedProtocol() == 3;
                  // Login
@@ -6301,7 +6300,7 @@ index e4c92ef7..ab2b55f3 100644
                  thisState = State.USERNAME;
                  ch.setProtocol( Protocol.LOGIN );
  
-@@ -427,6 +439,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -430,6 +442,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
          if ( BungeeCord.getInstance().config.isEnforceSecureProfile() && getVersion() < ProtocolConstants.MINECRAFT_1_19_3 )
          {
@@ -6309,7 +6308,7 @@ index e4c92ef7..ab2b55f3 100644
              PlayerPublicKey publicKey = loginRequest.getPublicKey();
              if ( publicKey == null )
              {
-@@ -500,8 +513,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -503,8 +516,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      {
          Preconditions.checkState( thisState == State.ENCRYPT, "Not expecting ENCRYPT" );
          Preconditions.checkState( EncryptionUtil.check( loginRequest.getPublicKey(), encryptResponse, request ), "Invalid verification" );
@@ -6327,7 +6326,7 @@ index e4c92ef7..ab2b55f3 100644
          BungeeCipher decrypt = EncryptionUtil.getCipher( false, sharedKey );
          ch.addBefore( PipelineUtils.FRAME_DECODER, PipelineUtils.DECRYPT_HANDLER, new CipherDecoder( decrypt ) );
          BungeeCipher encrypt = EncryptionUtil.getCipher( true, sharedKey );
-@@ -522,7 +544,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -525,7 +547,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          String encodedHash = URLEncoder.encode( new BigInteger( sha.digest() ).toString( 16 ), "UTF-8" );
  
          String preventProxy = ( BungeeCord.getInstance().config.isPreventProxyConnections() && getSocketAddress() instanceof InetSocketAddress ) ? "&ip=" + URLEncoder.encode( getAddress().getAddress().getHostAddress(), "UTF-8" ) : "";
@@ -6336,7 +6335,7 @@ index e4c92ef7..ab2b55f3 100644
  
          Callback<String> handler = new Callback<String>()
          {
-@@ -548,7 +570,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -551,7 +573,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
                  }
              }
          };
@@ -6345,7 +6344,7 @@ index e4c92ef7..ab2b55f3 100644
          HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
      }
  
-@@ -626,7 +648,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -629,7 +651,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
          };
  
          // fire login event
@@ -6354,7 +6353,7 @@ index e4c92ef7..ab2b55f3 100644
      }
  
      private void finish2()
-@@ -797,26 +819,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -800,26 +822,13 @@ public class InitialHandler extends PacketHandler implements PendingConnection
      @Override
      public String getUUID()
      {
@@ -6383,7 +6382,7 @@ index e4c92ef7..ab2b55f3 100644
      }
  
      @Override
-@@ -833,9 +842,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
+@@ -836,9 +845,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection
  
              for ( String id : content.split( "\0" ) )
              {
@@ -6398,10 +6397,10 @@ index e4c92ef7..ab2b55f3 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index ce975957..3e583f51 100644
+index 93f57bc1..c3fd80c5 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-@@ -52,6 +52,8 @@ public class UpstreamBridge extends PacketHandler
+@@ -51,6 +51,8 @@ public class UpstreamBridge extends PacketHandler
      private final ProxyServer bungee;
      private final UserConnection con;
  
@@ -6410,7 +6409,7 @@ index ce975957..3e583f51 100644
      public UpstreamBridge(ProxyServer bungee, UserConnection con)
      {
          this.bungee = bungee;
-@@ -196,16 +198,22 @@ public class UpstreamBridge extends PacketHandler
+@@ -195,16 +197,22 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(ClientCommand command) throws Exception
      {
@@ -6435,7 +6434,7 @@ index ce975957..3e583f51 100644
      {
          for ( int index = 0, length = message.length(); index < length; index++ )
          {
-@@ -224,7 +232,13 @@ public class UpstreamBridge extends PacketHandler
+@@ -223,7 +231,13 @@ public class UpstreamBridge extends PacketHandler
              if ( !chatEvent.isCommand() || !bungee.getPluginManager().dispatchCommand( con, message.substring( 1 ) ) )
              {
                  return message;
@@ -6449,7 +6448,7 @@ index ce975957..3e583f51 100644
          }
          throw CancelSendSignal.INSTANCE;
      }
-@@ -232,6 +246,20 @@ public class UpstreamBridge extends PacketHandler
+@@ -231,6 +245,20 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(TabCompleteRequest tabComplete) throws Exception
      {
@@ -6470,7 +6469,7 @@ index ce975957..3e583f51 100644
          List<String> suggestions = new ArrayList<>();
          boolean isRegisteredCommand = false;
          boolean isCommand = tabComplete.getCursor().startsWith( "/" );
-@@ -388,6 +416,6 @@ public class UpstreamBridge extends PacketHandler
+@@ -381,6 +409,6 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public String toString()
      {
@@ -6479,7 +6478,7 @@ index ce975957..3e583f51 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
-index c8fdb2e9..243acba6 100644
+index eab5a947..140430c9 100644
 --- a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 +++ b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 @@ -27,6 +27,11 @@ public abstract class EntityMap
@@ -6494,7 +6493,7 @@ index c8fdb2e9..243acba6 100644
          switch ( version )
          {
              case ProtocolConstants.MINECRAFT_1_8:
-@@ -311,7 +316,13 @@ public abstract class EntityMap
+@@ -299,7 +304,13 @@ public abstract class EntityMap
                      DefinedPacket.readVarInt( packet );
                      break;
                  default:
@@ -6509,7 +6508,7 @@ index c8fdb2e9..243acba6 100644
              }
          }
  
-@@ -349,6 +360,12 @@ public abstract class EntityMap
+@@ -337,6 +348,12 @@ public abstract class EntityMap
          int packetId = DefinedPacket.readVarInt( packet );
          int packetIdLength = packet.readerIndex() - readerIndex;
  
