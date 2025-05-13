@@ -1,4 +1,4 @@
-From 3dd839dc2ebfa401db5da70545699fad69049a09 Mon Sep 17 00:00:00 2001
+From 844b5e3e6c6f16ef7d2d77c3c036e87e3349d992 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 25 Feb 2025 20:25:09 +0100
 Subject: [PATCH] Waterfall changes
@@ -4110,10 +4110,10 @@ index 40fdb868..dce064d7 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 976ee797..05e75c02 100644
+index 6e00f1a6..62715be1 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-@@ -127,6 +127,16 @@ public class ProtocolConstants
+@@ -128,6 +128,16 @@ public class ProtocolConstants
          SUPPORTED_VERSION_IDS = supportedVersionIds.build();
      }
  
@@ -5028,7 +5028,7 @@ index 00000000..6cec0b5a
 +
 +}
 diff --git a/proxy/src/main/java/net/md_5/bungee/BungeeCord.java b/proxy/src/main/java/net/md_5/bungee/BungeeCord.java
-index 849662a7..4dbf3df9 100644
+index fb92e1d4..a03c4128 100644
 --- a/proxy/src/main/java/net/md_5/bungee/BungeeCord.java
 +++ b/proxy/src/main/java/net/md_5/bungee/BungeeCord.java
 @@ -7,6 +7,9 @@ import com.google.common.collect.Lists;
@@ -5039,9 +5039,9 @@ index 849662a7..4dbf3df9 100644
 +import io.github.waterfallmc.waterfall.event.ProxyExceptionEvent;
 +import io.github.waterfallmc.waterfall.exception.ProxyPluginEnableDisableException;
  import io.netty.bootstrap.ServerBootstrap;
- import io.netty.channel.Channel;
- import io.netty.channel.ChannelException;
-@@ -45,7 +48,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
+ import io.netty.buffer.ByteBuf;
+ import io.netty.buffer.Unpooled;
+@@ -47,7 +50,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  import java.util.logging.Handler;
  import java.util.logging.Level;
  import java.util.logging.Logger;
@@ -5049,7 +5049,7 @@ index 849662a7..4dbf3df9 100644
  import lombok.Getter;
  import lombok.Setter;
  import lombok.Synchronized;
-@@ -66,15 +68,11 @@ import net.md_5.bungee.command.CommandEnd;
+@@ -68,15 +70,11 @@ import net.md_5.bungee.command.CommandEnd;
  import net.md_5.bungee.command.CommandIP;
  import net.md_5.bungee.command.CommandPerms;
  import net.md_5.bungee.command.CommandReload;
@@ -5065,7 +5065,7 @@ index 849662a7..4dbf3df9 100644
  import net.md_5.bungee.module.ModuleManager;
  import net.md_5.bungee.netty.PipelineUtils;
  import net.md_5.bungee.protocol.DefinedPacket;
-@@ -84,8 +82,6 @@ import net.md_5.bungee.protocol.packet.PluginMessage;
+@@ -86,8 +84,6 @@ import net.md_5.bungee.protocol.packet.PluginMessage;
  import net.md_5.bungee.query.RemoteQuery;
  import net.md_5.bungee.scheduler.BungeeScheduler;
  import net.md_5.bungee.util.CaseInsensitiveMap;
@@ -5074,7 +5074,7 @@ index 849662a7..4dbf3df9 100644
  
  /**
   * Main BungeeCord proxy class.
-@@ -101,17 +97,17 @@ public class BungeeCord extends ProxyServer
+@@ -103,17 +99,17 @@ public class BungeeCord extends ProxyServer
       * Configuration.
       */
      @Getter
@@ -5095,7 +5095,7 @@ index 849662a7..4dbf3df9 100644
      /**
       * Server socket listener.
       */
-@@ -145,8 +141,12 @@ public class BungeeCord extends ProxyServer
+@@ -147,8 +143,12 @@ public class BungeeCord extends ProxyServer
      private final File pluginsFolder = new File( "plugins" );
      @Getter
      private final BungeeScheduler scheduler = new BungeeScheduler();
@@ -5108,7 +5108,7 @@ index 849662a7..4dbf3df9 100644
      @Getter
      private final Logger logger;
      @Getter
-@@ -182,7 +182,7 @@ public class BungeeCord extends ProxyServer
+@@ -184,7 +184,7 @@ public class BungeeCord extends ProxyServer
      public BungeeCord() throws IOException
      {
          // Java uses ! to indicate a resource inside of a jar/zip/other container. Running Bungee from within a directory that has a ! will cause this to muck up.
@@ -5117,7 +5117,7 @@ index 849662a7..4dbf3df9 100644
  
          reloadMessages();
  
-@@ -196,6 +196,8 @@ public class BungeeCord extends ProxyServer
+@@ -198,6 +198,8 @@ public class BungeeCord extends ProxyServer
          // BungeeCord. This version is only used when extracting the libraries to their temp folder.
          System.setProperty( "library.jansi.version", "BungeeCord" );
  
@@ -5126,7 +5126,7 @@ index 849662a7..4dbf3df9 100644
          AnsiConsole.systemInstall();
          consoleReader = new ConsoleReader();
          consoleReader.setExpandEvents( false );
-@@ -220,6 +222,9 @@ public class BungeeCord extends ProxyServer
+@@ -222,6 +224,9 @@ public class BungeeCord extends ProxyServer
          // since it applies a nice looking format and also writes to the logfile.
          System.setErr( new PrintStream( new LoggingOutputStream( logger, Level.SEVERE ), true ) );
          System.setOut( new PrintStream( new LoggingOutputStream( logger, Level.INFO ), true ) );
@@ -5136,8 +5136,8 @@ index 849662a7..4dbf3df9 100644
  
          pluginManager = new PluginManager( this );
          getPluginManager().registerCommand( null, new CommandReload() );
-@@ -262,7 +267,8 @@ public class BungeeCord extends ProxyServer
-             ResourceLeakDetector.setLevel( ResourceLeakDetector.Level.DISABLED ); // Eats performance
+@@ -290,7 +295,8 @@ public class BungeeCord extends ProxyServer
+             System.setProperty( "io.netty.allocator.type", "pooled" );
          }
  
 -        eventLoops = PipelineUtils.newEventLoopGroup( 0, new ThreadFactoryBuilder().setNameFormat( "Netty IO Thread #%1$d" ).build() );
@@ -5146,7 +5146,7 @@ index 849662a7..4dbf3df9 100644
  
          File moduleDirectory = new File( "modules" );
          moduleManager.load( this, moduleDirectory );
-@@ -279,8 +285,6 @@ public class BungeeCord extends ProxyServer
+@@ -307,8 +313,6 @@ public class BungeeCord extends ProxyServer
              registerChannel( ForgeConstants.FML_TAG );
              registerChannel( ForgeConstants.FML_HANDSHAKE_TAG );
              registerChannel( ForgeConstants.FORGE_REGISTER );
@@ -5155,7 +5155,7 @@ index 849662a7..4dbf3df9 100644
          }
  
          isRunning = true;
-@@ -304,7 +308,7 @@ public class BungeeCord extends ProxyServer
+@@ -332,7 +336,7 @@ public class BungeeCord extends ProxyServer
                  }
              }
          }, 0, TimeUnit.MINUTES.toMillis( 5 ) );
@@ -5164,7 +5164,7 @@ index 849662a7..4dbf3df9 100644
  
          Runtime.getRuntime().addShutdownHook( new Thread()
          {
-@@ -347,11 +351,11 @@ public class BungeeCord extends ProxyServer
+@@ -375,11 +379,11 @@ public class BungeeCord extends ProxyServer
                  }
              };
              new ServerBootstrap()
@@ -5178,7 +5178,7 @@ index 849662a7..4dbf3df9 100644
                      .localAddress( info.getSocketAddress() )
                      .bind().addListener( listener );
  
-@@ -374,7 +378,7 @@ public class BungeeCord extends ProxyServer
+@@ -402,7 +406,7 @@ public class BungeeCord extends ProxyServer
                          }
                      }
                  };
@@ -5187,7 +5187,7 @@ index 849662a7..4dbf3df9 100644
              }
          }
      }
-@@ -462,7 +466,7 @@ public class BungeeCord extends ProxyServer
+@@ -490,7 +494,7 @@ public class BungeeCord extends ProxyServer
              reconnectHandler.close();
          }
          saveThread.cancel();
@@ -5196,7 +5196,7 @@ index 849662a7..4dbf3df9 100644
  
          getLogger().info( "Disabling plugins" );
          for ( Plugin plugin : Lists.reverse( new ArrayList<>( pluginManager.getPlugins() ) ) )
-@@ -476,27 +480,30 @@ public class BungeeCord extends ProxyServer
+@@ -504,27 +508,30 @@ public class BungeeCord extends ProxyServer
                  }
              } catch ( Throwable t )
              {
@@ -5238,7 +5238,7 @@ index 849662a7..4dbf3df9 100644
  
          // Unlock the thread before optionally calling system exit, which might invoke this function again.
          // If that happens, the system will obtain the lock, and then see that isRunning == false and return without doing anything.
-@@ -531,7 +538,7 @@ public class BungeeCord extends ProxyServer
+@@ -559,7 +566,7 @@ public class BungeeCord extends ProxyServer
      @Override
      public String getName()
      {
@@ -5247,7 +5247,7 @@ index 849662a7..4dbf3df9 100644
      }
  
      @Override
-@@ -653,10 +660,18 @@ public class BungeeCord extends ProxyServer
+@@ -681,10 +688,18 @@ public class BungeeCord extends ProxyServer
          return config.getServers();
      }
  
@@ -5267,7 +5267,7 @@ index 849662a7..4dbf3df9 100644
      }
  
      @Override
-@@ -699,7 +714,7 @@ public class BungeeCord extends ProxyServer
+@@ -727,7 +742,7 @@ public class BungeeCord extends ProxyServer
      @Override
      public String getGameVersion()
      {
@@ -6824,15 +6824,15 @@ index 684654d2..925cc346 100644
                      {
                          ProxyServer.getInstance().getLogger().log( Level.WARNING, "{0} - corrupted frame: {1}", new Object[]
 diff --git a/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java b/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java
-index 21664e76..1f70c951 100644
+index 0a916c04..1da05b6d 100644
 --- a/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java
 +++ b/proxy/src/main/java/net/md_5/bungee/netty/PipelineUtils.java
-@@ -1,9 +1,12 @@
+@@ -1,8 +1,12 @@
  package net.md_5.bungee.netty;
  
  import com.google.common.base.Preconditions;
 +import io.github.waterfallmc.waterfall.event.ConnectionInitEvent;
- import io.netty.buffer.PooledByteBufAllocator;
++import io.netty.buffer.PooledByteBufAllocator;
  import io.netty.channel.Channel;
  import io.netty.channel.ChannelException;
 +import io.netty.channel.ChannelFactory;
@@ -6840,7 +6840,7 @@ index 21664e76..1f70c951 100644
  import io.netty.channel.ChannelOption;
  import io.netty.channel.EventLoopGroup;
  import io.netty.channel.MultiThreadIoEventLoopGroup;
-@@ -57,7 +60,7 @@ import net.md_5.bungee.util.PacketLimiter;
+@@ -56,7 +60,7 @@ import net.md_5.bungee.util.PacketLimiter;
  public class PipelineUtils
  {
  
@@ -6849,7 +6849,7 @@ index 21664e76..1f70c951 100644
  
      private static void setChannelInitializerHolders()
      {
-@@ -76,8 +79,23 @@ public class PipelineUtils
+@@ -75,8 +79,23 @@ public class PipelineUtils
              {
                  return false;
              }
@@ -6874,7 +6874,7 @@ index 21664e76..1f70c951 100644
              ch.pipeline().addBefore( FRAME_DECODER, LEGACY_DECODER, new LegacyDecoder() );
              ch.pipeline().addAfter( FRAME_DECODER, PACKET_DECODER, new MinecraftDecoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
              ch.pipeline().addAfter( FRAME_PREPENDER_AND_COMPRESS, PACKET_ENCODER, new MinecraftEncoder( Protocol.HANDSHAKE, true, ProxyServer.getInstance().getProtocolVersion() ) );
-@@ -96,6 +114,10 @@ public class PipelineUtils
+@@ -95,6 +114,10 @@ public class PipelineUtils
              {
                  ch.pipeline().addFirst( new HAProxyMessageDecoder() );
              }
@@ -6885,7 +6885,7 @@ index 21664e76..1f70c951 100644
  
              return true;
          } ) );
-@@ -129,6 +151,12 @@ public class PipelineUtils
+@@ -128,6 +151,12 @@ public class PipelineUtils
  
      private static boolean epoll;
      private static boolean io_uring;
@@ -6898,7 +6898,7 @@ index 21664e76..1f70c951 100644
  
      static
      {
-@@ -162,6 +190,12 @@ public class PipelineUtils
+@@ -161,6 +190,12 @@ public class PipelineUtils
          }
  
          setChannelInitializerHolders();
@@ -6911,7 +6911,7 @@ index 21664e76..1f70c951 100644
      }
  
      public static EventLoopGroup newEventLoopGroup(int threads, ThreadFactory factory)
-@@ -193,6 +227,34 @@ public class PipelineUtils
+@@ -192,6 +227,34 @@ public class PipelineUtils
          return io_uring ? IoUringSocketChannel.class : epoll ? EpollSocketChannel.class : NioSocketChannel.class;
      }
  
@@ -6946,14 +6946,15 @@ index 21664e76..1f70c951 100644
      public static Class<? extends DatagramChannel> getDatagramChannel()
      {
          return io_uring ? IoUringDatagramChannel.class : epoll ? EpollDatagramChannel.class : NioDatagramChannel.class;
-@@ -221,6 +283,7 @@ public class PipelineUtils
+@@ -218,6 +281,8 @@ public class PipelineUtils
+             {
+                 // IP_TOS is not supported (Windows XP / Windows Server 2003)
              }
-             // https://github.com/netty/netty/wiki/Netty-4.2-Migration-Guide
-             // TODO: check for AdaptiveByteBufAllocator
++
 +            ch.config().setOption( ChannelOption.TCP_NODELAY, true );
-             ch.config().setAllocator( PooledByteBufAllocator.DEFAULT );
              ch.config().setWriteBufferWaterMark( MARK );
  
+             ch.pipeline().addLast( FRAME_DECODER, new Varint21FrameDecoder() );
 diff --git a/proxy/src/main/java/net/md_5/bungee/scheduler/BungeeTask.java b/proxy/src/main/java/net/md_5/bungee/scheduler/BungeeTask.java
 index 38b75b51..02ec98fc 100644
 --- a/proxy/src/main/java/net/md_5/bungee/scheduler/BungeeTask.java
