@@ -1,4 +1,4 @@
-From 844b5e3e6c6f16ef7d2d77c3c036e87e3349d992 Mon Sep 17 00:00:00 2001
+From 489ac158271299647b5874f78b8f86bc89c05b9d Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Tue, 25 Feb 2025 20:25:09 +0100
 Subject: [PATCH] Waterfall changes
@@ -26,10 +26,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 diff --git a/api/pom.xml b/api/pom.xml
-index b050e847..26ad9ac8 100644
+index fdf519e1..82616946 100644
 --- a/api/pom.xml
 +++ b/api/pom.xml
-@@ -4,42 +4,42 @@
+@@ -4,48 +4,48 @@
      <modelVersion>4.0.0</modelVersion>
  
      <parent>
@@ -66,6 +66,14 @@ index b050e847..26ad9ac8 100644
 -            <artifactId>bungeecord-config</artifactId>
 +            <groupId>io.github.waterfallmc</groupId>
 +            <artifactId>waterfall-config</artifactId>
+             <version>${project.version}</version>
+             <scope>compile</scope>
+         </dependency>
+         <dependency>
+-            <groupId>net.md-5</groupId>
+-            <artifactId>bungeecord-dialog</artifactId>
++            <groupId>io.github.waterfallmc</groupId>
++            <artifactId>waterfall-dialog</artifactId>
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
@@ -1311,10 +1319,10 @@ index e582808f..29cd91dd 100644
      }
  
 diff --git a/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java b/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java
-index 17dd8694..5f71c316 100644
+index 1c0714f4..a6657bf3 100644
 --- a/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java
 +++ b/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java
-@@ -128,6 +128,38 @@ public interface ProxiedPlayer extends Connection, CommandSender
+@@ -129,6 +129,38 @@ public interface ProxiedPlayer extends Connection, CommandSender
       */
      void connect(ServerInfo target, Callback<Boolean> callback);
  
@@ -1353,7 +1361,7 @@ index 17dd8694..5f71c316 100644
      /**
       * Connects / transfers this user to the specified connection, gracefully
       * closing the current one. Depending on the implementation, this method
-@@ -141,6 +173,25 @@ public interface ProxiedPlayer extends Connection, CommandSender
+@@ -142,6 +174,25 @@ public interface ProxiedPlayer extends Connection, CommandSender
       */
      void connect(ServerInfo target, Callback<Boolean> callback, ServerConnectEvent.Reason reason);
  
@@ -1811,53 +1819,6 @@ index 102c2121..6acd757d 100644
  
      <dependencies>
          <dependency>
-diff --git a/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java b/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
-index 2d8233e6..276322a8 100644
---- a/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
-+++ b/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
-@@ -673,6 +673,26 @@ public class ComponentsTest
-         assertEquals( testClickEvent, extraGetter.apply( eventRetention, 1 ).getClickEvent() );
-     }
- 
-+    @Test
-+    public void testBuilderSpecialFormatting()
-+    {
-+        BaseComponent[] components = new ComponentBuilder( "Hello " )
-+                .bold(true).underlined(true).italic(true).strikethrough(true).obfuscated(true)
-+                .append("World").underlined(false).strikethrough(false).create();
-+
-+        assertTrue( components[0].isBold() );
-+        assertTrue( components[0].isUnderlined() );
-+        assertTrue( components[0].isItalic() );
-+        assertTrue( components[0].isStrikethrough() );
-+        assertTrue( components[0].isObfuscated() );
-+
-+        assertTrue( components[1].isBold() );
-+        assertFalse( components[1].isUnderlined() );
-+        assertTrue( components[1].isItalic() );
-+        assertFalse( components[1].isStrikethrough() );
-+        assertTrue( components[1].isObfuscated() );
-+    }
-+
-     @Test
-     public void testLoopSimple()
-     {
-diff --git a/chat/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java b/chat/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java
-index 995c70f2..dd9f040d 100644
---- a/chat/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java
-+++ b/chat/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java
-@@ -48,4 +48,11 @@ public class TranslatableComponentTest
-         assertEquals( "Buried Treasure Map", one_four_two.toPlainText() );
-     }
- 
-+    @Test
-+    public void testEscapedPercentInPlainText()
-+    {
-+        TranslatableComponent testComponent = new TranslatableComponent( "Test string with %% sign" );
-+        assertEquals( "Test string with % sign", testComponent.toPlainText() );
-+        assertEquals( "§fTest string with §f%§f sign", testComponent.toLegacyText() );
-+    }
- }
 diff --git a/config/pom.xml b/config/pom.xml
 index b24fb9d3..7041e584 100644
 --- a/config/pom.xml
@@ -1906,6 +1867,47 @@ index 262b29c8..d7ed3e11 100644
      private Configuration getSectionFor(String path)
      {
          int index = path.indexOf( SEPARATOR );
+diff --git a/dialog/pom.xml b/dialog/pom.xml
+index 0a3d929c..f6421ac7 100644
+--- a/dialog/pom.xml
++++ b/dialog/pom.xml
+@@ -4,19 +4,19 @@
+     <modelVersion>4.0.0</modelVersion>
+ 
+     <parent>
+-        <groupId>net.md-5</groupId>
+-        <artifactId>bungeecord-parent</artifactId>
++        <groupId>io.github.waterfallmc</groupId>
++        <artifactId>waterfall-parent</artifactId>
+         <version>1.21-R0.3-SNAPSHOT</version>
+         <relativePath>../pom.xml</relativePath>
+     </parent>
+ 
+-    <groupId>net.md-5</groupId>
+-    <artifactId>bungeecord-dialog</artifactId>
++    <groupId>io.github.waterfallmc</groupId>
++    <artifactId>waterfall-dialog</artifactId>
+     <version>1.21-R0.3-SNAPSHOT</version>
+     <packaging>jar</packaging>
+ 
+-    <name>BungeeCord-Dialog</name>
+-    <description>Minecraft dialog API intended for use with BungeeCord</description>
++    <name>Waterfall-Dialog</name>
++    <description>Minecraft dialog API intended for use with Waterfall</description>
+     <licenses>
+         <license>
+             <name>BSD-3-Clause</name>
+@@ -27,8 +27,8 @@
+ 
+     <dependencies>
+         <dependency>
+-            <groupId>net.md-5</groupId>
+-            <artifactId>bungeecord-chat</artifactId>
++            <groupId>io.github.waterfallmc</groupId>
++            <artifactId>waterfall-chat</artifactId>
+             <version>${project.version}</version>
+             <scope>compile</scope>
+         </dependency>
 diff --git a/event/pom.xml b/event/pom.xml
 index 61ee9b45..eab7e89d 100644
 --- a/event/pom.xml
@@ -3491,7 +3493,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/pom.xml b/pom.xml
-index 0af145e1..dfcebb8c 100644
+index cb567025..4f1892b7 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -3542,9 +3544,9 @@ index 0af145e1..dfcebb8c 100644
          </developer>
      </developers>
  
-@@ -36,38 +48,35 @@
-         <module>chat</module>
+@@ -37,39 +49,36 @@
          <module>config</module>
+         <module>dialog</module>
          <module>event</module>
 -        <module>log</module>
 +        <!--<module>log</module>-->
@@ -3553,6 +3555,7 @@ index 0af145e1..dfcebb8c 100644
          <module>protocol</module>
          <module>proxy</module>
          <module>query</module>
+         <module>serializer</module>
 -        <module>slf4j</module>
 +        <!--<module>slf4j</module>-->
          <module>native</module>
@@ -3594,7 +3597,7 @@ index 0af145e1..dfcebb8c 100644
      </distributionManagement>
  
      <properties>
-@@ -149,12 +158,21 @@
+@@ -151,12 +160,21 @@
                      </execution>
                  </executions>
              </plugin>
@@ -3616,7 +3619,7 @@ index 0af145e1..dfcebb8c 100644
                  <groupId>org.apache.maven.plugins</groupId>
                  <artifactId>maven-checkstyle-plugin</artifactId>
                  <version>3.6.0</version>
-@@ -179,6 +197,7 @@
+@@ -181,6 +199,7 @@
                      </dependency>
                  </dependencies>
              </plugin>
@@ -3624,7 +3627,7 @@ index 0af145e1..dfcebb8c 100644
              <plugin>
                  <groupId>org.codehaus.mojo</groupId>
                  <artifactId>animal-sniffer-maven-plugin</artifactId>
-@@ -300,6 +319,15 @@
+@@ -302,6 +321,15 @@
                                  </goals>
                              </execution>
                          </executions>
@@ -3640,7 +3643,7 @@ index 0af145e1..dfcebb8c 100644
                      </plugin>
                      <plugin>
                          <groupId>org.projectlombok</groupId>
-@@ -348,6 +376,7 @@
+@@ -350,6 +378,7 @@
                                      <!-- lombok does not add @return or @param which causes warnings, so ignore -->
                                      <doclint>none</doclint>
                                      <sourcepath>${project.build.directory}/delombok</sourcepath>
@@ -3649,7 +3652,7 @@ index 0af145e1..dfcebb8c 100644
                              </execution>
                          </executions>
 diff --git a/protocol/pom.xml b/protocol/pom.xml
-index 10278395..85e66f0c 100644
+index 77e11507..5c032ca0 100644
 --- a/protocol/pom.xml
 +++ b/protocol/pom.xml
 @@ -4,19 +4,19 @@
@@ -3683,18 +3686,18 @@ index 10278395..85e66f0c 100644
          </dependency>
          <dependency>
 -            <groupId>net.md-5</groupId>
--            <artifactId>bungeecord-chat</artifactId>
+-            <artifactId>bungeecord-serializer</artifactId>
 +            <groupId>io.github.waterfallmc</groupId>
-+            <artifactId>waterfall-chat</artifactId>
++            <artifactId>waterfall-serializer</artifactId>
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java b/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java
-index 8d91211b..4dde7257 100644
+index 8c73509b..d7547a50 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/AbstractPacketHandler.java
-@@ -278,4 +278,18 @@ public abstract class AbstractPacketHandler
-     public void handle(ServerLinks serverLinks) throws Exception
+@@ -293,4 +293,18 @@ public abstract class AbstractPacketHandler
+     public void handle(CustomClickAction customClickAction) throws Exception
      {
      }
 +
@@ -4043,7 +4046,7 @@ index 237955ab..d0bd4d75 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-index 40fdb868..dce064d7 100644
+index 32ffa28f..f0843ebc 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 @@ -2,6 +2,8 @@ package net.md_5.bungee.protocol;
@@ -4055,9 +4058,9 @@ index 40fdb868..dce064d7 100644
  import gnu.trove.map.TIntObjectMap;
  import gnu.trove.map.TObjectIntMap;
  import gnu.trove.map.hash.TIntObjectHashMap;
-@@ -612,6 +614,13 @@ public enum Protocol
-                     map( ProtocolConstants.MINECRAFT_1_20_5, 0x06 ),
-                     map( ProtocolConstants.MINECRAFT_1_21_2, 0x07 )
+@@ -628,6 +630,13 @@ public enum Protocol
+                     map( ProtocolConstants.MINECRAFT_1_21_2, 0x07 ),
+                     map( ProtocolConstants.MINECRAFT_1_21_6, 0x08 )
              );
 +            // Waterfall start
 +            TO_SERVER.registerPacket(
@@ -4069,7 +4072,7 @@ index 40fdb868..dce064d7 100644
              TO_SERVER.registerPacket(
                      TabCompleteRequest.class,
                      TabCompleteRequest::new,
-@@ -945,14 +954,23 @@ public enum Protocol
+@@ -971,14 +980,23 @@ public enum Protocol
              return protocol;
          }
  
@@ -4094,7 +4097,7 @@ index 40fdb868..dce064d7 100644
              {
                  throw new BadPacketException( "Packet with id " + id + " outside of range" );
              }
-@@ -1019,9 +1037,12 @@ public enum Protocol
+@@ -1045,9 +1063,12 @@ public enum Protocol
              {
                  throw new BadPacketException( "Unsupported protocol version" );
              }
@@ -4110,7 +4113,7 @@ index 40fdb868..dce064d7 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 6e00f1a6..62715be1 100644
+index b1b532c9..8d65ca52 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 @@ -128,6 +128,16 @@ public class ProtocolConstants
@@ -5632,7 +5635,7 @@ index 5583a1b3..bce4c4e7 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 35e59709..20dba78c 100644
+index d5df3c27..d4e70cae 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -5645,7 +5648,7 @@ index 35e59709..20dba78c 100644
  import io.netty.bootstrap.Bootstrap;
  import io.netty.channel.ChannelFuture;
  import io.netty.channel.ChannelFutureListener;
-@@ -126,6 +128,10 @@ public final class UserConnection implements ProxiedPlayer
+@@ -130,6 +132,10 @@ public final class UserConnection implements ProxiedPlayer
      private final Scoreboard serverSentScoreboard = new Scoreboard();
      @Getter
      private final Collection<UUID> sentBossBars = new HashSet<>();
@@ -5656,7 +5659,7 @@ index 35e59709..20dba78c 100644
      @Getter
      @Setter
      private String lastCommandTabbed;
-@@ -185,9 +191,12 @@ public final class UserConnection implements ProxiedPlayer
+@@ -189,9 +195,12 @@ public final class UserConnection implements ProxiedPlayer
  
          forgeClientHandler = new ForgeClientHandler( this );
  
@@ -5671,7 +5674,7 @@ index 35e59709..20dba78c 100644
          return BungeeCord.getInstance().addConnection( this );
      }
  
-@@ -310,9 +319,24 @@ public final class UserConnection implements ProxiedPlayer
+@@ -314,9 +323,24 @@ public final class UserConnection implements ProxiedPlayer
  
      public void connect(ServerInfo info, final Callback<Boolean> callback, final boolean retry, ServerConnectEvent.Reason reason)
      {
@@ -5697,7 +5700,7 @@ index 35e59709..20dba78c 100644
          if ( callback != null )
          {
              // Convert the Callback<Boolean> to be compatible with Callback<Result> from ServerConnectRequest.
-@@ -360,7 +384,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -364,7 +388,7 @@ public final class UserConnection implements ProxiedPlayer
                  callback.done( ServerConnectRequest.Result.ALREADY_CONNECTED, null );
              }
  
@@ -5706,7 +5709,7 @@ index 35e59709..20dba78c 100644
              return;
          }
          if ( pendingConnects.contains( target ) )
-@@ -370,7 +394,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -374,7 +398,7 @@ public final class UserConnection implements ProxiedPlayer
                  callback.done( ServerConnectRequest.Result.ALREADY_CONNECTING, null );
              }
  
@@ -5715,7 +5718,7 @@ index 35e59709..20dba78c 100644
              return;
          }
  
-@@ -395,14 +419,14 @@ public final class UserConnection implements ProxiedPlayer
+@@ -399,14 +423,14 @@ public final class UserConnection implements ProxiedPlayer
                      ServerInfo def = updateAndGetNextServer( target );
                      if ( request.isRetry() && def != null && ( getServer() == null || def != getServer().getInfo() ) )
                      {
@@ -5733,7 +5736,7 @@ index 35e59709..20dba78c 100644
                      }
                  } else
                  {
-@@ -411,7 +435,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -415,7 +439,7 @@ public final class UserConnection implements ProxiedPlayer
              }
          };
          Bootstrap b = new Bootstrap()
@@ -5742,7 +5745,7 @@ index 35e59709..20dba78c 100644
                  .group( ch.getHandle().eventLoop() )
                  .handler( bungee.unsafe().getBackendChannelInitializer().getChannelInitializer() )
                  .option( ChannelOption.CONNECT_TIMEOUT_MILLIS, request.getConnectTimeout() )
-@@ -426,7 +450,8 @@ public final class UserConnection implements ProxiedPlayer
+@@ -430,7 +454,8 @@ public final class UserConnection implements ProxiedPlayer
  
      private String connectionFailMessage(Throwable cause)
      {
@@ -5752,10 +5755,11 @@ index 35e59709..20dba78c 100644
      }
  
      @Override
-@@ -826,4 +851,9 @@ public final class UserConnection implements ProxiedPlayer
+@@ -846,4 +871,10 @@ public final class UserConnection implements ProxiedPlayer
  
-         unsafe().sendPacket( new Transfer( host, port ) );
+         unsafe.sendPacket( new ShowDialog( Either.right( dialog ) ) );
      }
++
 +    // Waterfall start
 +    public boolean isDisableEntityMetadataRewrite() {
 +        return entityRewrite == net.md_5.bungee.entitymap.EntityMap_Dummy.INSTANCE;
@@ -6397,10 +6401,10 @@ index fa1f2bef..8d7fb51d 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index 93f57bc1..c3fd80c5 100644
+index c0fdf533..c2b9d0bf 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-@@ -51,6 +51,8 @@ public class UpstreamBridge extends PacketHandler
+@@ -55,6 +55,8 @@ public class UpstreamBridge extends PacketHandler
      private final ProxyServer bungee;
      private final UserConnection con;
  
@@ -6409,7 +6413,7 @@ index 93f57bc1..c3fd80c5 100644
      public UpstreamBridge(ProxyServer bungee, UserConnection con)
      {
          this.bungee = bungee;
-@@ -195,16 +197,22 @@ public class UpstreamBridge extends PacketHandler
+@@ -199,16 +201,22 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(ClientCommand command) throws Exception
      {
@@ -6434,7 +6438,7 @@ index 93f57bc1..c3fd80c5 100644
      {
          for ( int index = 0, length = message.length(); index < length; index++ )
          {
-@@ -223,7 +231,13 @@ public class UpstreamBridge extends PacketHandler
+@@ -227,7 +235,13 @@ public class UpstreamBridge extends PacketHandler
              if ( !chatEvent.isCommand() || !bungee.getPluginManager().dispatchCommand( con, message.substring( 1 ) ) )
              {
                  return message;
@@ -6448,7 +6452,7 @@ index 93f57bc1..c3fd80c5 100644
          }
          throw CancelSendSignal.INSTANCE;
      }
-@@ -231,6 +245,20 @@ public class UpstreamBridge extends PacketHandler
+@@ -235,6 +249,20 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(TabCompleteRequest tabComplete) throws Exception
      {
@@ -6469,7 +6473,7 @@ index 93f57bc1..c3fd80c5 100644
          List<String> suggestions = new ArrayList<>();
          boolean isRegisteredCommand = false;
          boolean isCommand = tabComplete.getCursor().startsWith( "/" );
-@@ -381,6 +409,6 @@ public class UpstreamBridge extends PacketHandler
+@@ -409,6 +437,6 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public String toString()
      {
@@ -7154,6 +7158,99 @@ index 9b81197f..0c1ecfb8 100644
                  out.writeByte( 0x00 ); // Null
              } else
              {
+diff --git a/serializer/pom.xml b/serializer/pom.xml
+index 670eb6bc..ec3bb3bd 100644
+--- a/serializer/pom.xml
++++ b/serializer/pom.xml
+@@ -4,19 +4,19 @@
+     <modelVersion>4.0.0</modelVersion>
+ 
+     <parent>
+-        <groupId>net.md-5</groupId>
+-        <artifactId>bungeecord-parent</artifactId>
++        <groupId>io.github.waterfallmc</groupId>
++        <artifactId>waterfall-parent</artifactId>
+         <version>1.21-R0.3-SNAPSHOT</version>
+         <relativePath>../pom.xml</relativePath>
+     </parent>
+ 
+-    <groupId>net.md-5</groupId>
+-    <artifactId>bungeecord-serializer</artifactId>
++    <groupId>io.github.waterfallmc</groupId>
++    <artifactId>waterfall-serializer</artifactId>
+     <version>1.21-R0.3-SNAPSHOT</version>
+     <packaging>jar</packaging>
+ 
+-    <name>BungeeCord-Serializer</name>
+-    <description>Minecraft JSON serializer intended for use with BungeeCord</description>
++    <name>Waterfall-Serializer</name>
++    <description>Minecraft JSON serializer intended for use with Waterfall</description>
+ 
+     <dependencies>
+         <dependency>
+@@ -27,13 +27,13 @@
+         </dependency>
+         <dependency>
+             <groupId>${project.groupId}</groupId>
+-            <artifactId>bungeecord-chat</artifactId>
++            <artifactId>waterfall-chat</artifactId>
+             <version>${project.version}</version>
+             <scope>compile</scope>
+         </dependency>
+         <dependency>
+             <groupId>${project.groupId}</groupId>
+-            <artifactId>bungeecord-dialog</artifactId>
++            <artifactId>waterfall-dialog</artifactId>
+             <version>${project.version}</version>
+             <scope>compile</scope>
+         </dependency>
+diff --git a/serializer/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java b/serializer/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
+index 2d8233e6..276322a8 100644
+--- a/serializer/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
++++ b/serializer/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
+@@ -673,6 +673,26 @@ public class ComponentsTest
+         assertEquals( testClickEvent, extraGetter.apply( eventRetention, 1 ).getClickEvent() );
+     }
+ 
++    @Test
++    public void testBuilderSpecialFormatting()
++    {
++        BaseComponent[] components = new ComponentBuilder( "Hello " )
++                .bold(true).underlined(true).italic(true).strikethrough(true).obfuscated(true)
++                .append("World").underlined(false).strikethrough(false).create();
++
++        assertTrue( components[0].isBold() );
++        assertTrue( components[0].isUnderlined() );
++        assertTrue( components[0].isItalic() );
++        assertTrue( components[0].isStrikethrough() );
++        assertTrue( components[0].isObfuscated() );
++
++        assertTrue( components[1].isBold() );
++        assertFalse( components[1].isUnderlined() );
++        assertTrue( components[1].isItalic() );
++        assertFalse( components[1].isStrikethrough() );
++        assertTrue( components[1].isObfuscated() );
++    }
++
+     @Test
+     public void testLoopSimple()
+     {
+diff --git a/serializer/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java b/serializer/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java
+index 995c70f2..dd9f040d 100644
+--- a/serializer/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java
++++ b/serializer/src/test/java/net/md_5/bungee/api/chat/TranslatableComponentTest.java
+@@ -48,4 +48,11 @@ public class TranslatableComponentTest
+         assertEquals( "Buried Treasure Map", one_four_two.toPlainText() );
+     }
+ 
++    @Test
++    public void testEscapedPercentInPlainText()
++    {
++        TranslatableComponent testComponent = new TranslatableComponent( "Test string with %% sign" );
++        assertEquals( "Test string with % sign", testComponent.toPlainText() );
++        assertEquals( "§fTest string with §f%§f sign", testComponent.toLegacyText() );
++    }
+ }
 diff --git a/slf4j/nb-configuration.xml b/slf4j/nb-configuration.xml
 deleted file mode 100644
 index 7e465924..00000000
