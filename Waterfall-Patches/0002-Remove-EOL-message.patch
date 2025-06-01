@@ -1,14 +1,14 @@
-From 46333d504a8072d7ab916b8b472651b11acb6ccd Mon Sep 17 00:00:00 2001
+From 9d04c9afdb574c33f3a6602b115bd157d0e3c87f Mon Sep 17 00:00:00 2001
 From: Krakenied <Krakenied1@gmail.com>
 Date: Thu, 4 Apr 2024 19:19:47 +0200
 Subject: [PATCH] Remove EOL message
 
 
 diff --git a/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java b/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java
-index 72d6a15d..e95b67c7 100644
+index c7d13591..9ed00f4b 100644
 --- a/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java
 +++ b/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java
-@@ -64,7 +64,7 @@ public class BungeeCordLauncher
+@@ -66,7 +66,7 @@ public class BungeeCordLauncher
          BungeeCord bungee = new BungeeCord();
          ProxyServer.setInstance( bungee );
          bungee.getLogger().info( "Enabled Waterfall version " + bungee.getVersion() );
@@ -18,5 +18,5 @@ index 72d6a15d..e95b67c7 100644
  
          if ( !options.has( "noconsole" ) )
 -- 
-2.44.0.windows.1
+2.45.2.windows.1
 

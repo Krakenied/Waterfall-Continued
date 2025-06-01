@@ -1,4 +1,4 @@
-From eb4c456f89f66b693bf172b201db71fdc8b7ebb7 Mon Sep 17 00:00:00 2001
+From 25d542fac516d6a803495cf8c2f9f7e865381f21 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Thu, 22 May 2025 16:41:25 +0200
 Subject: [PATCH] Waterfall changes
@@ -2028,7 +2028,7 @@ index 014de202..40792a68 100644
  
      @EventHandler
 diff --git a/log/pom.xml b/log/pom.xml
-index 37679ec1..e694ea92 100644
+index 8fa24a92..857e4f36 100644
 --- a/log/pom.xml
 +++ b/log/pom.xml
 @@ -4,19 +4,19 @@
@@ -3492,8 +3492,38 @@ J0e6qH{{iO8w2c4&
 literal 0
 HcmV?d00001
 
+diff --git a/nbt/pom.xml b/nbt/pom.xml
+index fd457927..09fdf9e4 100644
+--- a/nbt/pom.xml
++++ b/nbt/pom.xml
+@@ -4,19 +4,19 @@
+     <modelVersion>4.0.0</modelVersion>
+ 
+     <parent>
+-        <groupId>net.md-5</groupId>
+-        <artifactId>bungeecord-parent</artifactId>
++        <groupId>io.github.waterfallmc</groupId>
++        <artifactId>waterfall-parent</artifactId>
+         <version>1.21-R0.3-SNAPSHOT</version>
+         <relativePath>../pom.xml</relativePath>
+     </parent>
+ 
+-    <groupId>net.md-5</groupId>
+-    <artifactId>bungeecord-nbt</artifactId>
++    <groupId>io.github.waterfallmc</groupId>
++    <artifactId>waterfall-nbt</artifactId>
+     <version>1.21-R0.3-SNAPSHOT</version>
+     <packaging>jar</packaging>
+ 
+-    <name>BungeeCord-NBT</name>
+-    <description>Minimal implementation of NBT for use in BungeeCord</description>
++    <name>Waterfall-NBT</name>
++    <description>Minimal implementation of NBT for use in Waterfall</description>
+     <licenses>
+         <license>
+             <name>BSD-3-Clause</name>
 diff --git a/pom.xml b/pom.xml
-index dd3e628f..6c7ec073 100644
+index 57bac7e4..bd05ec1b 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -3547,7 +3577,7 @@ index dd3e628f..6c7ec073 100644
          </developer>
      </developers>
  
-@@ -37,39 +52,36 @@
+@@ -37,40 +52,37 @@
          <module>config</module>
          <module>dialog</module>
          <module>event</module>
@@ -3562,6 +3592,7 @@ index dd3e628f..6c7ec073 100644
 -        <module>slf4j</module>
 +        <!--<module>slf4j</module>-->
          <module>native</module>
+         <module>nbt</module>
      </modules>
  
      <scm>
@@ -3600,7 +3631,7 @@ index dd3e628f..6c7ec073 100644
      </distributionManagement>
  
      <properties>
-@@ -130,7 +142,7 @@
+@@ -125,7 +137,7 @@
                  <plugin>
                      <groupId>org.apache.maven.plugins</groupId>
                      <artifactId>maven-javadoc-plugin</artifactId>
@@ -3609,7 +3640,7 @@ index dd3e628f..6c7ec073 100644
                  </plugin>
              </plugins>
          </pluginManagement>
-@@ -151,12 +163,21 @@
+@@ -146,12 +158,21 @@
                      </execution>
                  </executions>
              </plugin>
@@ -3631,7 +3662,7 @@ index dd3e628f..6c7ec073 100644
                  <groupId>org.apache.maven.plugins</groupId>
                  <artifactId>maven-checkstyle-plugin</artifactId>
                  <version>3.6.0</version>
-@@ -181,6 +202,7 @@
+@@ -176,6 +197,7 @@
                      </dependency>
                  </dependencies>
              </plugin>
@@ -3639,7 +3670,7 @@ index dd3e628f..6c7ec073 100644
              <plugin>
                  <groupId>org.codehaus.mojo</groupId>
                  <artifactId>animal-sniffer-maven-plugin</artifactId>
-@@ -302,6 +324,15 @@
+@@ -297,6 +319,15 @@
                                  </goals>
                              </execution>
                          </executions>
@@ -3656,7 +3687,7 @@ index dd3e628f..6c7ec073 100644
                      <plugin>
                          <groupId>org.projectlombok</groupId>
 diff --git a/protocol/pom.xml b/protocol/pom.xml
-index 77e11507..5c032ca0 100644
+index 9d68f817..5e257563 100644
 --- a/protocol/pom.xml
 +++ b/protocol/pom.xml
 @@ -4,19 +4,19 @@
@@ -3685,7 +3716,7 @@ index 77e11507..5c032ca0 100644
  
      <!-- We really shouldn't depend on external repositories -->
      <repositories>
-@@ -35,8 +35,8 @@
+@@ -35,14 +35,14 @@
              <scope>compile</scope>
          </dependency>
          <dependency>
@@ -3693,6 +3724,14 @@ index 77e11507..5c032ca0 100644
 -            <artifactId>bungeecord-serializer</artifactId>
 +            <groupId>io.github.waterfallmc</groupId>
 +            <artifactId>waterfall-serializer</artifactId>
+             <version>${project.version}</version>
+             <scope>compile</scope>
+         </dependency>
+         <dependency>
+-            <groupId>net.md-5</groupId>
+-            <artifactId>bungeecord-nbt</artifactId>
++            <groupId>io.github.waterfallmc</groupId>
++            <artifactId>waterfall-nbt</artifactId>
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
@@ -3749,10 +3788,10 @@ index 6c0ef4df..076ddd70 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java b/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
-index b2a4729c..7fa1a5e6 100644
+index 0d484acc..26d40e10 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
-@@ -47,6 +47,9 @@ public abstract class DefinedPacket
+@@ -48,6 +48,9 @@ public abstract class DefinedPacket
          }
      }
  
@@ -3762,7 +3801,7 @@ index b2a4729c..7fa1a5e6 100644
      public static void writeString(String s, ByteBuf buf)
      {
          writeString( s, buf, Short.MAX_VALUE );
-@@ -88,6 +91,7 @@ public abstract class DefinedPacket
+@@ -89,6 +92,7 @@ public abstract class DefinedPacket
          int len = readVarInt( buf );
          if ( len > maxLen * 3 )
          {
@@ -3770,7 +3809,7 @@ index b2a4729c..7fa1a5e6 100644
              throw new OverflowPacketException( "Cannot receive string longer than " + maxLen * 3 + " (got " + len + " bytes)" );
          }
  
-@@ -96,6 +100,7 @@ public abstract class DefinedPacket
+@@ -97,6 +101,7 @@ public abstract class DefinedPacket
  
          if ( s.length() > maxLen )
          {
@@ -3778,7 +3817,7 @@ index b2a4729c..7fa1a5e6 100644
              throw new OverflowPacketException( "Cannot receive string longer than " + maxLen + " (got " + s.length() + " characters)" );
          }
  
-@@ -251,13 +256,18 @@ public abstract class DefinedPacket
+@@ -250,13 +255,18 @@ public abstract class DefinedPacket
          byte in;
          while ( true )
          {
@@ -3798,7 +3837,7 @@ index b2a4729c..7fa1a5e6 100644
              }
  
              if ( ( in & 0x80 ) != 0x80 )
-@@ -593,4 +603,21 @@ public abstract class DefinedPacket
+@@ -589,4 +599,21 @@ public abstract class DefinedPacket
  
      @Override
      public abstract String toString();
@@ -4057,19 +4096,10 @@ index 237955ab..d0bd4d75 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-index 32ffa28f..f0843ebc 100644
+index c9600df5..2ed22122 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-@@ -2,6 +2,8 @@ package net.md_5.bungee.protocol;
- 
- import com.google.common.base.Preconditions;
- import com.google.common.collect.Iterables;
-+
-+import gnu.trove.impl.Constants;
- import gnu.trove.map.TIntObjectMap;
- import gnu.trove.map.TObjectIntMap;
- import gnu.trove.map.hash.TIntObjectHashMap;
-@@ -628,6 +630,13 @@ public enum Protocol
+@@ -628,6 +628,13 @@ public enum Protocol
                      map( ProtocolConstants.MINECRAFT_1_21_2, 0x07 ),
                      map( ProtocolConstants.MINECRAFT_1_21_6, 0x08 )
              );
@@ -4083,7 +4113,7 @@ index 32ffa28f..f0843ebc 100644
              TO_SERVER.registerPacket(
                      TabCompleteRequest.class,
                      TabCompleteRequest::new,
-@@ -971,14 +980,23 @@ public enum Protocol
+@@ -971,14 +978,23 @@ public enum Protocol
              return protocol;
          }
  
@@ -4108,7 +4138,7 @@ index 32ffa28f..f0843ebc 100644
              {
                  throw new BadPacketException( "Packet with id " + id + " outside of range" );
              }
-@@ -1045,9 +1063,12 @@ public enum Protocol
+@@ -1045,9 +1061,12 @@ public enum Protocol
              {
                  throw new BadPacketException( "Unsupported protocol version" );
              }
@@ -4124,7 +4154,7 @@ index 32ffa28f..f0843ebc 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index b1b532c9..8d65ca52 100644
+index 99adad59..648fa491 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 @@ -128,6 +128,16 @@ public class ProtocolConstants
@@ -5042,28 +5072,20 @@ index 00000000..6cec0b5a
 +
 +}
 diff --git a/proxy/src/main/java/net/md_5/bungee/BungeeCord.java b/proxy/src/main/java/net/md_5/bungee/BungeeCord.java
-index ffa4588a..5af782ee 100644
+index d412c58a..c30c2746 100644
 --- a/proxy/src/main/java/net/md_5/bungee/BungeeCord.java
 +++ b/proxy/src/main/java/net/md_5/bungee/BungeeCord.java
-@@ -7,6 +7,9 @@ import com.google.common.collect.Lists;
+@@ -6,6 +6,9 @@ import com.google.common.collect.Iterables;
+ import com.google.common.collect.Lists;
  import com.google.common.collect.Sets;
  import com.google.common.util.concurrent.ThreadFactoryBuilder;
- import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 +import io.github.waterfallmc.waterfall.conf.WaterfallConfiguration;
 +import io.github.waterfallmc.waterfall.event.ProxyExceptionEvent;
 +import io.github.waterfallmc.waterfall.exception.ProxyPluginEnableDisableException;
  import io.netty.bootstrap.ServerBootstrap;
  import io.netty.channel.Channel;
  import io.netty.channel.ChannelException;
-@@ -45,7 +48,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
- import java.util.logging.Handler;
- import java.util.logging.Level;
- import java.util.logging.Logger;
--import jline.console.ConsoleReader;
- import lombok.Getter;
- import lombok.Setter;
- import lombok.Synchronized;
-@@ -66,16 +68,12 @@ import net.md_5.bungee.command.CommandEnd;
+@@ -64,16 +67,12 @@ import net.md_5.bungee.command.CommandEnd;
  import net.md_5.bungee.command.CommandIP;
  import net.md_5.bungee.command.CommandPerms;
  import net.md_5.bungee.command.CommandReload;
@@ -5080,16 +5102,19 @@ index ffa4588a..5af782ee 100644
  import net.md_5.bungee.module.ModuleManager;
  import net.md_5.bungee.netty.PipelineUtils;
  import net.md_5.bungee.protocol.DefinedPacket;
-@@ -85,8 +83,6 @@ import net.md_5.bungee.protocol.packet.PluginMessage;
+@@ -83,11 +82,6 @@ import net.md_5.bungee.protocol.packet.PluginMessage;
  import net.md_5.bungee.query.RemoteQuery;
  import net.md_5.bungee.scheduler.BungeeScheduler;
  import net.md_5.bungee.util.CaseInsensitiveMap;
--import org.fusesource.jansi.AnsiConsole;
+-import org.jline.reader.LineReader;
+-import org.jline.reader.LineReaderBuilder;
+-import org.jline.terminal.Terminal;
+-import org.jline.terminal.TerminalBuilder;
 -import org.slf4j.impl.JDK14LoggerFactory;
  
  /**
   * Main BungeeCord proxy class.
-@@ -102,17 +98,17 @@ public class BungeeCord extends ProxyServer
+@@ -103,17 +97,17 @@ public class BungeeCord extends ProxyServer
       * Configuration.
       */
      @Getter
@@ -5110,20 +5135,20 @@ index ffa4588a..5af782ee 100644
      /**
       * Server socket listener.
       */
-@@ -146,8 +142,12 @@ public class BungeeCord extends ProxyServer
+@@ -147,8 +141,12 @@ public class BungeeCord extends ProxyServer
      private final File pluginsFolder = new File( "plugins" );
      @Getter
      private final BungeeScheduler scheduler = new BungeeScheduler();
 +    // Waterfall start - Remove ConsoleReader for JLine 3 update
 +    /*
      @Getter
-     private final ConsoleReader consoleReader;
+     private final LineReader consoleReader;
 +    */
 +    // Waterfall end
      @Getter
      private final Logger logger;
      @Getter
-@@ -183,7 +183,7 @@ public class BungeeCord extends ProxyServer
+@@ -183,7 +181,7 @@ public class BungeeCord extends ProxyServer
      public BungeeCord() throws IOException
      {
          // Java uses ! to indicate a resource inside of a jar/zip/other container. Running Bungee from within a directory that has a ! will cause this to muck up.
@@ -5132,16 +5157,16 @@ index ffa4588a..5af782ee 100644
  
          reloadMessages();
  
-@@ -197,6 +197,8 @@ public class BungeeCord extends ProxyServer
+@@ -197,6 +195,8 @@ public class BungeeCord extends ProxyServer
          // BungeeCord. This version is only used when extracting the libraries to their temp folder.
          System.setProperty( "library.jansi.version", "BungeeCord" );
  
 +        // Waterfall start - Use TerminalConsoleAppender and Log4J
 +        /*
-         AnsiConsole.systemInstall();
-         consoleReader = new ConsoleReader();
-         consoleReader.setExpandEvents( false );
-@@ -221,6 +223,9 @@ public class BungeeCord extends ProxyServer
+         Terminal terminal = TerminalBuilder.builder().build();
+         consoleReader = LineReaderBuilder.builder().terminal( terminal )
+                 .option( LineReader.Option.DISABLE_EVENT_EXPANSION, true )
+@@ -222,6 +222,9 @@ public class BungeeCord extends ProxyServer
          // since it applies a nice looking format and also writes to the logfile.
          System.setErr( new PrintStream( new LoggingOutputStream( logger, Level.SEVERE ), true ) );
          System.setOut( new PrintStream( new LoggingOutputStream( logger, Level.INFO ), true ) );
@@ -5151,7 +5176,7 @@ index ffa4588a..5af782ee 100644
  
          pluginManager = new PluginManager( this );
          getPluginManager().registerCommand( null, new CommandReload() );
-@@ -276,7 +281,8 @@ public class BungeeCord extends ProxyServer
+@@ -276,7 +279,8 @@ public class BungeeCord extends ProxyServer
              System.setProperty( "io.netty.allocator.type", "pooled" );
          }
  
@@ -5161,7 +5186,7 @@ index ffa4588a..5af782ee 100644
  
          File moduleDirectory = new File( "modules" );
          moduleManager.load( this, moduleDirectory );
-@@ -293,8 +299,6 @@ public class BungeeCord extends ProxyServer
+@@ -293,8 +297,6 @@ public class BungeeCord extends ProxyServer
              registerChannel( ForgeConstants.FML_TAG );
              registerChannel( ForgeConstants.FML_HANDSHAKE_TAG );
              registerChannel( ForgeConstants.FORGE_REGISTER );
@@ -5170,7 +5195,7 @@ index ffa4588a..5af782ee 100644
          }
  
          isRunning = true;
-@@ -318,7 +322,7 @@ public class BungeeCord extends ProxyServer
+@@ -318,7 +320,7 @@ public class BungeeCord extends ProxyServer
                  }
              }
          }, 0, TimeUnit.MINUTES.toMillis( 5 ) );
@@ -5179,7 +5204,7 @@ index ffa4588a..5af782ee 100644
  
          Runtime.getRuntime().addShutdownHook( new Thread()
          {
-@@ -361,11 +365,11 @@ public class BungeeCord extends ProxyServer
+@@ -361,11 +363,11 @@ public class BungeeCord extends ProxyServer
                  }
              };
              new ServerBootstrap()
@@ -5193,7 +5218,7 @@ index ffa4588a..5af782ee 100644
                      .localAddress( info.getSocketAddress() )
                      .bind().addListener( listener );
  
-@@ -388,7 +392,7 @@ public class BungeeCord extends ProxyServer
+@@ -388,7 +390,7 @@ public class BungeeCord extends ProxyServer
                          }
                      }
                  };
@@ -5202,7 +5227,7 @@ index ffa4588a..5af782ee 100644
              }
          }
      }
-@@ -476,7 +480,7 @@ public class BungeeCord extends ProxyServer
+@@ -474,7 +476,7 @@ public class BungeeCord extends ProxyServer
              reconnectHandler.close();
          }
          saveThread.cancel();
@@ -5211,7 +5236,7 @@ index ffa4588a..5af782ee 100644
  
          getLogger().info( "Disabling plugins" );
          for ( Plugin plugin : Lists.reverse( new ArrayList<>( pluginManager.getPlugins() ) ) )
-@@ -490,27 +494,30 @@ public class BungeeCord extends ProxyServer
+@@ -488,27 +490,30 @@ public class BungeeCord extends ProxyServer
                  }
              } catch ( Throwable t )
              {
@@ -5253,7 +5278,7 @@ index ffa4588a..5af782ee 100644
  
          // Unlock the thread before optionally calling system exit, which might invoke this function again.
          // If that happens, the system will obtain the lock, and then see that isRunning == false and return without doing anything.
-@@ -545,7 +552,7 @@ public class BungeeCord extends ProxyServer
+@@ -543,7 +548,7 @@ public class BungeeCord extends ProxyServer
      @Override
      public String getName()
      {
@@ -5262,7 +5287,7 @@ index ffa4588a..5af782ee 100644
      }
  
      @Override
-@@ -667,10 +674,18 @@ public class BungeeCord extends ProxyServer
+@@ -665,10 +670,18 @@ public class BungeeCord extends ProxyServer
          return config.getServers();
      }
  
@@ -5282,7 +5307,7 @@ index ffa4588a..5af782ee 100644
      }
  
      @Override
-@@ -713,7 +728,7 @@ public class BungeeCord extends ProxyServer
+@@ -711,7 +724,7 @@ public class BungeeCord extends ProxyServer
      @Override
      public String getGameVersion()
      {
@@ -5292,10 +5317,10 @@ index ffa4588a..5af782ee 100644
  
      @Override
 diff --git a/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java b/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java
-index 7281d6b2..72d6a15d 100644
+index cec7fadb..c7d13591 100644
 --- a/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java
 +++ b/proxy/src/main/java/net/md_5/bungee/BungeeCordLauncher.java
-@@ -53,21 +53,25 @@ public class BungeeCordLauncher
+@@ -55,21 +55,25 @@ public class BungeeCordLauncher
              deadline.add( Calendar.WEEK_OF_YEAR, -8 );
              if ( buildDate.before( deadline.getTime() ) )
              {
@@ -5324,12 +5349,12 @@ index 7281d6b2..72d6a15d 100644
 +            // Waterfall start - Use TerminalConsoleAppender
 +            new io.github.waterfallmc.waterfall.console.WaterfallConsole().start();
 +            /*
-             String line;
-             while ( bungee.isRunning && ( line = bungee.getConsoleReader().readLine( ">" ) ) != null )
+             try
              {
-@@ -76,6 +80,8 @@ public class BungeeCordLauncher
-                     bungee.getConsole().sendMessage( new ComponentBuilder( "Command not found" ).color( ChatColor.RED ).create() );
-                 }
+                 String line;
+@@ -84,6 +88,8 @@ public class BungeeCordLauncher
+             {
+                 // ignore
              }
 +            */
 +            // Waterfall end
@@ -5650,7 +5675,7 @@ index 5583a1b3..8ffddb69 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index d5df3c27..d4e70cae 100644
+index 5adee5b8..431a1f10 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -5733,7 +5758,7 @@ index d5df3c27..d4e70cae 100644
              return;
          }
  
-@@ -399,14 +423,14 @@ public final class UserConnection implements ProxiedPlayer
+@@ -398,14 +422,14 @@ public final class UserConnection implements ProxiedPlayer
                      ServerInfo def = updateAndGetNextServer( target );
                      if ( request.isRetry() && def != null && ( getServer() == null || def != getServer().getInfo() ) )
                      {
@@ -5751,7 +5776,7 @@ index d5df3c27..d4e70cae 100644
                      }
                  } else
                  {
-@@ -415,7 +439,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -414,7 +438,7 @@ public final class UserConnection implements ProxiedPlayer
              }
          };
          Bootstrap b = new Bootstrap()
@@ -5760,7 +5785,7 @@ index d5df3c27..d4e70cae 100644
                  .group( ch.getHandle().eventLoop() )
                  .handler( bungee.unsafe().getBackendChannelInitializer().getChannelInitializer() )
                  .option( ChannelOption.CONNECT_TIMEOUT_MILLIS, request.getConnectTimeout() )
-@@ -430,7 +454,8 @@ public final class UserConnection implements ProxiedPlayer
+@@ -429,7 +453,8 @@ public final class UserConnection implements ProxiedPlayer
  
      private String connectionFailMessage(Throwable cause)
      {
@@ -5770,7 +5795,7 @@ index d5df3c27..d4e70cae 100644
      }
  
      @Override
-@@ -846,4 +871,10 @@ public final class UserConnection implements ProxiedPlayer
+@@ -845,4 +870,10 @@ public final class UserConnection implements ProxiedPlayer
  
          unsafe.sendPacket( new ShowDialog( Either.right( dialog ) ) );
      }
@@ -5809,10 +5834,10 @@ index efe048c9..720d0c3b 100644
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/command/ConsoleCommandCompleter.java b/proxy/src/main/java/net/md_5/bungee/command/ConsoleCommandCompleter.java
 deleted file mode 100644
-index 3e5ca394..00000000
+index 783ed60e..00000000
 --- a/proxy/src/main/java/net/md_5/bungee/command/ConsoleCommandCompleter.java
 +++ /dev/null
-@@ -1,38 +0,0 @@
+@@ -1,43 +0,0 @@
 -package net.md_5.bungee.command;
 -
 -import java.util.ArrayList;
@@ -5820,9 +5845,12 @@ index 3e5ca394..00000000
 -import java.util.Locale;
 -import java.util.Map;
 -import java.util.stream.Collectors;
--import jline.console.completer.Completer;
 -import lombok.RequiredArgsConstructor;
 -import net.md_5.bungee.api.ProxyServer;
+-import org.jline.reader.Candidate;
+-import org.jline.reader.Completer;
+-import org.jline.reader.LineReader;
+-import org.jline.reader.ParsedLine;
 -
 -@RequiredArgsConstructor
 -public class ConsoleCommandCompleter implements Completer
@@ -5831,24 +5859,26 @@ index 3e5ca394..00000000
 -    private final ProxyServer proxy;
 -
 -    @Override
--    public int complete(String buffer, int cursor, List<CharSequence> candidates)
+-    public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates)
 -    {
+-        List<String> suggestions;
+-        String buffer = line.line();
+-
 -        int lastSpace = buffer.lastIndexOf( ' ' );
 -        if ( lastSpace == -1 )
 -        {
 -            String lowerCase = buffer.toLowerCase( Locale.ROOT );
--            candidates.addAll( proxy.getPluginManager().getCommands().stream()
+-            suggestions = proxy.getPluginManager().getCommands().stream()
 -                    .map( Map.Entry::getKey )
 -                    .filter( (name) -> name.toLowerCase( Locale.ROOT ).startsWith( lowerCase ) )
--                    .collect( Collectors.toList() ) );
+-                    .collect( Collectors.toList() );
 -        } else
 -        {
--            List<String> suggestions = new ArrayList<>();
+-            suggestions = new ArrayList<>();
 -            proxy.getPluginManager().dispatchCommand( proxy.getConsole(), buffer, suggestions );
--            candidates.addAll( suggestions );
 -        }
 -
--        return ( lastSpace == -1 ) ? cursor - buffer.length() : cursor - ( buffer.length() - lastSpace - 1 );
+-        suggestions.stream().map( Candidate::new ).forEach( (candidate) -> candidates.add( candidate ) );
 -    }
 -}
 diff --git a/proxy/src/main/java/net/md_5/bungee/compress/PacketDecompressor.java b/proxy/src/main/java/net/md_5/bungee/compress/PacketDecompressor.java
@@ -5895,7 +5925,7 @@ index 1612ffcf..7fa07031 100644
                  out.add( decompressed );
                  decompressed = null;
 diff --git a/proxy/src/main/java/net/md_5/bungee/conf/Configuration.java b/proxy/src/main/java/net/md_5/bungee/conf/Configuration.java
-index 95320050..8a03a0ce 100644
+index b16d24e1..1f600dab 100644
 --- a/proxy/src/main/java/net/md_5/bungee/conf/Configuration.java
 +++ b/proxy/src/main/java/net/md_5/bungee/conf/Configuration.java
 @@ -1,6 +1,7 @@
@@ -5903,10 +5933,10 @@ index 95320050..8a03a0ce 100644
  
  import com.google.common.base.Preconditions;
 +import com.google.common.collect.ImmutableMap; // Waterfall
- import gnu.trove.map.TMap;
  import java.io.File;
  import java.io.IOException;
-@@ -11,12 +12,16 @@ import java.util.UUID;
+ import java.util.Arrays;
+@@ -10,12 +11,16 @@ import java.util.UUID;
  import java.util.logging.Level;
  import javax.imageio.ImageIO;
  import lombok.Getter;
@@ -5923,7 +5953,7 @@ index 95320050..8a03a0ce 100644
  import net.md_5.bungee.util.CaseInsensitiveMap;
  import net.md_5.bungee.util.CaseInsensitiveSet;
  
-@@ -24,7 +29,7 @@ import net.md_5.bungee.util.CaseInsensitiveSet;
+@@ -23,7 +28,7 @@ import net.md_5.bungee.util.CaseInsensitiveSet;
   * Core configuration for the proxy.
   */
  @Getter
@@ -5932,7 +5962,7 @@ index 95320050..8a03a0ce 100644
  {
  
      /**
-@@ -39,6 +44,7 @@ public class Configuration implements ProxyConfig
+@@ -38,6 +43,7 @@ public class Configuration implements ProxyConfig
       * Set of all listeners.
       */
      private Collection<ListenerInfo> listeners;
@@ -5940,7 +5970,7 @@ index 95320050..8a03a0ce 100644
      /**
       * Set of all servers.
       */
-@@ -67,11 +73,12 @@ public class Configuration implements ProxyConfig
+@@ -66,11 +72,12 @@ public class Configuration implements ProxyConfig
      private Favicon favicon;
      private int compressionThreshold = 256;
      private boolean preventProxyConnections;
@@ -5954,7 +5984,7 @@ index 95320050..8a03a0ce 100644
      public void load()
      {
          ConfigurationAdapter adapter = ProxyServer.getInstance().getConfigurationAdapter();
-@@ -122,20 +129,38 @@ public class Configuration implements ProxyConfig
+@@ -121,20 +128,38 @@ public class Configuration implements ProxyConfig
              servers = new CaseInsensitiveMap<>( newServers );
          } else
          {
@@ -6003,7 +6033,7 @@ index 95320050..8a03a0ce 100644
          }
  
          for ( ListenerInfo listener : listeners )
-@@ -167,4 +192,71 @@ public class Configuration implements ProxyConfig
+@@ -166,4 +191,71 @@ public class Configuration implements ProxyConfig
      {
          return favicon;
      }
@@ -6076,10 +6106,10 @@ index 95320050..8a03a0ce 100644
 +    // Waterfall end
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java b/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
-index 95781e33..915cfeda 100644
+index 9c8325bf..21d7c8e0 100644
 --- a/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
 +++ b/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
-@@ -47,10 +47,15 @@ public class YamlConfig implements ConfigurationAdapter
+@@ -46,10 +46,15 @@ public class YamlConfig implements ConfigurationAdapter
      }
      private final Yaml yaml;
      private Map<String, Object> config;
@@ -6097,7 +6127,7 @@ index 95781e33..915cfeda 100644
          DumperOptions options = new DumperOptions();
          options.setDefaultFlowStyle( DumperOptions.FlowStyle.BLOCK );
          yaml = new Yaml( options );
-@@ -58,6 +63,11 @@ public class YamlConfig implements ConfigurationAdapter
+@@ -57,6 +62,11 @@ public class YamlConfig implements ConfigurationAdapter
  
      @Override
      public void load()
@@ -6109,7 +6139,7 @@ index 95781e33..915cfeda 100644
      {
          try
          {
-@@ -86,6 +96,7 @@ public class YamlConfig implements ConfigurationAdapter
+@@ -85,6 +95,7 @@ public class YamlConfig implements ConfigurationAdapter
              throw new RuntimeException( "Could not load configuration!", ex );
          }
  
@@ -6117,7 +6147,7 @@ index 95781e33..915cfeda 100644
          Map<String, Object> permissions = get( "permissions", null );
          if ( permissions == null )
          {
-@@ -218,7 +229,7 @@ public class YamlConfig implements ConfigurationAdapter
+@@ -217,7 +228,7 @@ public class YamlConfig implements ConfigurationAdapter
              Map<String, Object> val = entry.getValue();
              String name = entry.getKey();
              String addr = get( "address", "localhost:25565", val );
@@ -6439,10 +6469,10 @@ index fa1f2bef..294860ed 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index 86d9d4c0..ba2f5842 100644
+index dc7b643a..264cb648 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-@@ -55,6 +55,8 @@ public class UpstreamBridge extends PacketHandler
+@@ -54,6 +54,8 @@ public class UpstreamBridge extends PacketHandler
      private final ProxyServer bungee;
      private final UserConnection con;
  
@@ -6451,7 +6481,7 @@ index 86d9d4c0..ba2f5842 100644
      public UpstreamBridge(ProxyServer bungee, UserConnection con)
      {
          this.bungee = bungee;
-@@ -199,16 +201,22 @@ public class UpstreamBridge extends PacketHandler
+@@ -198,16 +200,22 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(ClientCommand command) throws Exception
      {
@@ -6476,7 +6506,7 @@ index 86d9d4c0..ba2f5842 100644
      {
          for ( int index = 0, length = message.length(); index < length; index++ )
          {
-@@ -227,7 +235,13 @@ public class UpstreamBridge extends PacketHandler
+@@ -226,7 +234,13 @@ public class UpstreamBridge extends PacketHandler
              if ( !chatEvent.isCommand() || !bungee.getPluginManager().dispatchCommand( con, message.substring( 1 ) ) )
              {
                  return message;
@@ -6490,7 +6520,7 @@ index 86d9d4c0..ba2f5842 100644
          }
          throw CancelSendSignal.INSTANCE;
      }
-@@ -235,6 +249,20 @@ public class UpstreamBridge extends PacketHandler
+@@ -234,6 +248,20 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public void handle(TabCompleteRequest tabComplete) throws Exception
      {
@@ -6511,7 +6541,7 @@ index 86d9d4c0..ba2f5842 100644
          List<String> suggestions = new ArrayList<>();
          boolean isRegisteredCommand = false;
          boolean isCommand = tabComplete.getCursor().startsWith( "/" );
-@@ -417,6 +445,6 @@ public class UpstreamBridge extends PacketHandler
+@@ -394,6 +422,6 @@ public class UpstreamBridge extends PacketHandler
      @Override
      public String toString()
      {
@@ -6520,7 +6550,7 @@ index 86d9d4c0..ba2f5842 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
-index eab5a947..140430c9 100644
+index 77b27c6f..01a60130 100644
 --- a/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 +++ b/proxy/src/main/java/net/md_5/bungee/entitymap/EntityMap.java
 @@ -27,6 +27,11 @@ public abstract class EntityMap
@@ -6535,7 +6565,7 @@ index eab5a947..140430c9 100644
          switch ( version )
          {
              case ProtocolConstants.MINECRAFT_1_8:
-@@ -299,7 +304,13 @@ public abstract class EntityMap
+@@ -301,7 +306,13 @@ public abstract class EntityMap
                      DefinedPacket.readVarInt( packet );
                      break;
                  default:
@@ -6550,7 +6580,7 @@ index eab5a947..140430c9 100644
              }
          }
  
-@@ -337,6 +348,12 @@ public abstract class EntityMap
+@@ -342,6 +353,12 @@ public abstract class EntityMap
          int packetId = DefinedPacket.readVarInt( packet );
          int packetIdLength = packet.readerIndex() - readerIndex;
  
@@ -6702,7 +6732,7 @@ index 77d18e6d..d254b84e 100644
              synchronized ( packetQueue )
              {
 diff --git a/proxy/src/main/java/net/md_5/bungee/http/HttpClient.java b/proxy/src/main/java/net/md_5/bungee/http/HttpClient.java
-index e0c52f21..c3683c30 100644
+index 0bfcc94e..d3881a3c 100644
 --- a/proxy/src/main/java/net/md_5/bungee/http/HttpClient.java
 +++ b/proxy/src/main/java/net/md_5/bungee/http/HttpClient.java
 @@ -28,6 +28,10 @@ public class HttpClient
@@ -6714,9 +6744,9 @@ index e0c52f21..c3683c30 100644
 +            new io.netty.resolver.dns.DnsAddressResolverGroup(PipelineUtils.getDatagramChannel(), io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider.INSTANCE);
 +    // Waterfall End
  
-     @SuppressWarnings("UnusedAssignment")
      public static void get(String url, EventLoop eventLoop, final Callback<String> callback)
-@@ -57,19 +61,21 @@ public class HttpClient
+     {
+@@ -56,19 +60,21 @@ public class HttpClient
              }
          }
  
@@ -6751,7 +6781,7 @@ index e0c52f21..c3683c30 100644
  
          ChannelFutureListener future = new ChannelFutureListener()
          {
-@@ -92,7 +98,42 @@ public class HttpClient
+@@ -91,7 +97,42 @@ public class HttpClient
              }
          };
  
