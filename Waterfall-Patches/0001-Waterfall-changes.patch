@@ -1,4 +1,4 @@
-From 25d542fac516d6a803495cf8c2f9f7e865381f21 Mon Sep 17 00:00:00 2001
+From e651f30784a997802f125eb801ab70fd9aca45b6 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Thu, 22 May 2025 16:41:25 +0200
 Subject: [PATCH] Waterfall changes
@@ -3493,7 +3493,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/nbt/pom.xml b/nbt/pom.xml
-index fd457927..09fdf9e4 100644
+index 5c0a147a..3084f996 100644
 --- a/nbt/pom.xml
 +++ b/nbt/pom.xml
 @@ -4,19 +4,19 @@
@@ -5072,7 +5072,7 @@ index 00000000..6cec0b5a
 +
 +}
 diff --git a/proxy/src/main/java/net/md_5/bungee/BungeeCord.java b/proxy/src/main/java/net/md_5/bungee/BungeeCord.java
-index d412c58a..c30c2746 100644
+index 3576d6ae..c30c2746 100644
 --- a/proxy/src/main/java/net/md_5/bungee/BungeeCord.java
 +++ b/proxy/src/main/java/net/md_5/bungee/BungeeCord.java
 @@ -6,6 +6,9 @@ import com.google.common.collect.Iterables;
@@ -5110,7 +5110,7 @@ index d412c58a..c30c2746 100644
 -import org.jline.reader.LineReaderBuilder;
 -import org.jline.terminal.Terminal;
 -import org.jline.terminal.TerminalBuilder;
--import org.slf4j.impl.JDK14LoggerFactory;
+-import org.slf4j.jul.JDK14LoggerFactory;
  
  /**
   * Main BungeeCord proxy class.
@@ -6106,7 +6106,7 @@ index b16d24e1..1f600dab 100644
 +    // Waterfall end
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java b/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
-index 9c8325bf..21d7c8e0 100644
+index 25ef7ff5..3d97d674 100644
 --- a/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
 +++ b/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
 @@ -46,10 +46,15 @@ public class YamlConfig implements ConfigurationAdapter
@@ -7352,7 +7352,7 @@ index 7e465924..00000000
 -    </properties>
 -</project-shared-configuration>
 diff --git a/slf4j/pom.xml b/slf4j/pom.xml
-index 68ba54d4..214ec769 100644
+index c3015e2e..be31f62e 100644
 --- a/slf4j/pom.xml
 +++ b/slf4j/pom.xml
 @@ -4,19 +4,19 @@
@@ -7381,12 +7381,12 @@ index 68ba54d4..214ec769 100644
  
      <properties>
          <checkstyle.skip>true</checkstyle.skip>
-diff --git a/slf4j/src/main/java/org/slf4j/impl/JDK14LoggerAdapter.java b/slf4j/src/main/java/org/slf4j/impl/JDK14LoggerAdapter.java
+diff --git a/slf4j/src/main/java/org/slf4j/jul/JDK14LoggerAdapter.java b/slf4j/src/main/java/org/slf4j/jul/JDK14LoggerAdapter.java
 deleted file mode 100644
-index 49589454..00000000
---- a/slf4j/src/main/java/org/slf4j/impl/JDK14LoggerAdapter.java
+index 98a0fed4..00000000
+--- a/slf4j/src/main/java/org/slf4j/jul/JDK14LoggerAdapter.java
 +++ /dev/null
-@@ -1,700 +0,0 @@
+@@ -1,301 +0,0 @@
 -/**
 - * Copyright (c) 2004-2011 QOS.ch
 - * All rights reserved.
@@ -7411,7 +7411,7 @@ index 49589454..00000000
 - * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 - *
 - */
--package org.slf4j.impl;
+-package org.slf4j.jul;
 -
 -import java.util.logging.Level;
 -import java.util.logging.LogRecord;
@@ -7420,9 +7420,13 @@ index 49589454..00000000
 -import org.slf4j.Marker;
 -import org.slf4j.event.EventConstants;
 -import org.slf4j.event.LoggingEvent;
+-import org.slf4j.helpers.AbstractLogger;
 -import org.slf4j.helpers.FormattingTuple;
--import org.slf4j.helpers.MarkerIgnoringBase;
+-import org.slf4j.helpers.LegacyAbstractLogger;
 -import org.slf4j.helpers.MessageFormatter;
+-import org.slf4j.helpers.NormalizedParameters;
+-import org.slf4j.helpers.SubstituteLogger;
+-import org.slf4j.spi.DefaultLoggingEventBuilder;
 -import org.slf4j.spi.LocationAwareLogger;
 -
 -/**
@@ -7434,11 +7438,13 @@ index 49589454..00000000
 - * @author Ceki G&uuml;lc&uuml;
 - * @author Peter Royal
 - */
--public final class JDK14LoggerAdapter extends MarkerIgnoringBase implements LocationAwareLogger {
+-public final class JDK14LoggerAdapter extends LegacyAbstractLogger implements LocationAwareLogger {
 -
 -    private static final long serialVersionUID = -8053026990503422791L;
 -
 -    transient final java.util.logging.Logger logger;
+-
+-    static int NOT_FOUND = -1;
 -
 -    // WARN: JDK14LoggerAdapter constructor should have only package access so
 -    // that only JDK14LoggerFactory be able to create one.
@@ -7457,97 +7463,6 @@ index 49589454..00000000
 -    }
 -
 -    /**
--     * Log a message object at level FINEST.
--     * 
--     * @param msg
--     *          - the message object to be logged
--     */
--    public void trace(String msg) {
--        if (logger.isLoggable(Level.FINEST)) {
--            log(SELF, Level.FINEST, msg, null);
--        }
--    }
--
--    /**
--     * Log a message at level FINEST according to the specified format and
--     * argument.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for level FINEST.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg
--     *          the argument
--     */
--    public void trace(String format, Object arg) {
--        if (logger.isLoggable(Level.FINEST)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg);
--            log(SELF, Level.FINEST, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at level FINEST according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the FINEST level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg1
--     *          the first argument
--     * @param arg2
--     *          the second argument
--     */
--    public void trace(String format, Object arg1, Object arg2) {
--        if (logger.isLoggable(Level.FINEST)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
--            log(SELF, Level.FINEST, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at level FINEST according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the FINEST level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param argArray
--     *          an array of arguments
--     */
--    public void trace(String format, Object... argArray) {
--        if (logger.isLoggable(Level.FINEST)) {
--            FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
--            log(SELF, Level.FINEST, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log an exception (throwable) at level FINEST with an accompanying message.
--     * 
--     * @param msg
--     *          the message accompanying the exception
--     * @param t
--     *          the exception (throwable) to log
--     */
--    public void trace(String msg, Throwable t) {
--        if (logger.isLoggable(Level.FINEST)) {
--            log(SELF, Level.FINEST, msg, t);
--        }
--    }
--
--    /**
 -     * Is this logger instance enabled for the FINE level?
 -     * 
 -     * @return True if this Logger is enabled for level FINE, false otherwise.
@@ -7557,193 +7472,12 @@ index 49589454..00000000
 -    }
 -
 -    /**
--     * Log a message object at level FINE.
--     * 
--     * @param msg
--     *          - the message object to be logged
--     */
--    public void debug(String msg) {
--        if (logger.isLoggable(Level.FINE)) {
--            log(SELF, Level.FINE, msg, null);
--        }
--    }
--
--    /**
--     * Log a message at level FINE according to the specified format and argument.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for level FINE.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg
--     *          the argument
--     */
--    public void debug(String format, Object arg) {
--        if (logger.isLoggable(Level.FINE)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg);
--            log(SELF, Level.FINE, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at level FINE according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the FINE level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg1
--     *          the first argument
--     * @param arg2
--     *          the second argument
--     */
--    public void debug(String format, Object arg1, Object arg2) {
--        if (logger.isLoggable(Level.FINE)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
--            log(SELF, Level.FINE, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at level FINE according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the FINE level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param argArray
--     *          an array of arguments
--     */
--    public void debug(String format, Object... argArray) {
--        if (logger.isLoggable(Level.FINE)) {
--            FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
--            log(SELF, Level.FINE, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log an exception (throwable) at level FINE with an accompanying message.
--     * 
--     * @param msg
--     *          the message accompanying the exception
--     * @param t
--     *          the exception (throwable) to log
--     */
--    public void debug(String msg, Throwable t) {
--        if (logger.isLoggable(Level.FINE)) {
--            log(SELF, Level.FINE, msg, t);
--        }
--    }
--
--    /**
 -     * Is this logger instance enabled for the INFO level?
 -     * 
 -     * @return True if this Logger is enabled for the INFO level, false otherwise.
 -     */
 -    public boolean isInfoEnabled() {
 -        return logger.isLoggable(Level.INFO);
--    }
--
--    /**
--     * Log a message object at the INFO level.
--     * 
--     * @param msg
--     *          - the message object to be logged
--     */
--    public void info(String msg) {
--        if (logger.isLoggable(Level.INFO)) {
--            log(SELF, Level.INFO, msg, null);
--        }
--    }
--
--    /**
--     * Log a message at level INFO according to the specified format and argument.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the INFO level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg
--     *          the argument
--     */
--    public void info(String format, Object arg) {
--        if (logger.isLoggable(Level.INFO)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg);
--            log(SELF, Level.INFO, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at the INFO level according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the INFO level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg1
--     *          the first argument
--     * @param arg2
--     *          the second argument
--     */
--    public void info(String format, Object arg1, Object arg2) {
--        if (logger.isLoggable(Level.INFO)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
--            log(SELF, Level.INFO, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at level INFO according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the INFO level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param argArray
--     *          an array of arguments
--     */
--    public void info(String format, Object... argArray) {
--        if (logger.isLoggable(Level.INFO)) {
--            FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
--            log(SELF, Level.INFO, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log an exception (throwable) at the INFO level with an accompanying
--     * message.
--     * 
--     * @param msg
--     *          the message accompanying the exception
--     * @param t
--     *          the exception (throwable) to log
--     */
--    public void info(String msg, Throwable t) {
--        if (logger.isLoggable(Level.INFO)) {
--            log(SELF, Level.INFO, msg, t);
--        }
 -    }
 -
 -    /**
@@ -7757,98 +7491,6 @@ index 49589454..00000000
 -    }
 -
 -    /**
--     * Log a message object at the WARNING level.
--     * 
--     * @param msg
--     *          - the message object to be logged
--     */
--    public void warn(String msg) {
--        if (logger.isLoggable(Level.WARNING)) {
--            log(SELF, Level.WARNING, msg, null);
--        }
--    }
--
--    /**
--     * Log a message at the WARNING level according to the specified format and
--     * argument.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the WARNING level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg
--     *          the argument
--     */
--    public void warn(String format, Object arg) {
--        if (logger.isLoggable(Level.WARNING)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg);
--            log(SELF, Level.WARNING, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at the WARNING level according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the WARNING level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg1
--     *          the first argument
--     * @param arg2
--     *          the second argument
--     */
--    public void warn(String format, Object arg1, Object arg2) {
--        if (logger.isLoggable(Level.WARNING)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
--            log(SELF, Level.WARNING, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at level WARNING according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the WARNING level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param argArray
--     *          an array of arguments
--     */
--    public void warn(String format, Object... argArray) {
--        if (logger.isLoggable(Level.WARNING)) {
--            FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
--            log(SELF, Level.WARNING, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log an exception (throwable) at the WARNING level with an accompanying
--     * message.
--     * 
--     * @param msg
--     *          the message accompanying the exception
--     * @param t
--     *          the exception (throwable) to log
--     */
--    public void warn(String msg, Throwable t) {
--        if (logger.isLoggable(Level.WARNING)) {
--            log(SELF, Level.WARNING, msg, t);
--        }
--    }
--
--    /**
 -     * Is this logger instance enabled for level SEVERE?
 -     * 
 -     * @return True if this Logger is enabled for level SEVERE, false otherwise.
@@ -7857,157 +7499,83 @@ index 49589454..00000000
 -        return logger.isLoggable(Level.SEVERE);
 -    }
 -
--    /**
--     * Log a message object at the SEVERE level.
--     * 
--     * @param msg
--     *          - the message object to be logged
--     */
--    public void error(String msg) {
--        if (logger.isLoggable(Level.SEVERE)) {
--            log(SELF, Level.SEVERE, msg, null);
--        }
--    }
--
--    /**
--     * Log a message at the SEVERE level according to the specified format and
--     * argument.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the SEVERE level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg
--     *          the argument
--     */
--    public void error(String format, Object arg) {
--        if (logger.isLoggable(Level.SEVERE)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg);
--            log(SELF, Level.SEVERE, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at the SEVERE level according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the SEVERE level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arg1
--     *          the first argument
--     * @param arg2
--     *          the second argument
--     */
--    public void error(String format, Object arg1, Object arg2) {
--        if (logger.isLoggable(Level.SEVERE)) {
--            FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
--            log(SELF, Level.SEVERE, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log a message at level SEVERE according to the specified format and
--     * arguments.
--     * 
--     * <p>
--     * This form avoids superfluous object creation when the logger is disabled
--     * for the SEVERE level.
--     * </p>
--     * 
--     * @param format
--     *          the format string
--     * @param arguments
--     *          an array of arguments
--     */
--    public void error(String format, Object... arguments) {
--        if (logger.isLoggable(Level.SEVERE)) {
--            FormattingTuple ft = MessageFormatter.arrayFormat(format, arguments);
--            log(SELF, Level.SEVERE, ft.getMessage(), ft.getThrowable());
--        }
--    }
--
--    /**
--     * Log an exception (throwable) at the SEVERE level with an accompanying
--     * message.
--     * 
--     * @param msg
--     *          the message accompanying the exception
--     * @param t
--     *          the exception (throwable) to log
--     */
--    public void error(String msg, Throwable t) {
--        if (logger.isLoggable(Level.SEVERE)) {
--            log(SELF, Level.SEVERE, msg, t);
--        }
--    }
+-    // /**
+-    // * Log the message at the specified level with the specified throwable if any.
+-    // * This method creates a LogRecord and fills in caller date before calling
+-    // * this instance's JDK14 logger.
+-    // *
+-    // * See bug report #13 for more details.
+-    // *
+-    // * @param level
+-    // * @param msg
+-    // * @param t
+-    // */
+-    // private void log(String callerFQCN, Level level, String msg, Throwable t) {
+-    // // millis and thread are filled by the constructor
+-    // LogRecord record = new LogRecord(level, msg);
+-    // record.setLoggerName(getName());
+-    // record.setThrown(t);
+-    // // Note: parameters in record are not set because SLF4J only
+-    // // supports a single formatting style
+-    // fillCallerData(callerFQCN, record);
+-    // logger.log(record);
+-    // }
 -
 -    /**
 -     * Log the message at the specified level with the specified throwable if any.
--     * This method creates a LogRecord and fills in caller date before calling
--     * this instance's JDK14 logger.
--     * 
--     * See bug report #13 for more details.
--     * 
--     * @param level
--     * @param msg
--     * @param t
+-     * This method creates a LogRecord and fills in caller date before calling this
+-     * instance's JDK14 logger.
 -     */
--    private void log(String callerFQCN, Level level, String msg, Throwable t) {
+-    @Override
+-    protected void handleNormalizedLoggingCall(org.slf4j.event.Level level, Marker marker, String msg, Object[] args, Throwable throwable) {
+-        innerNormalizedLoggingCallHandler(getFullyQualifiedCallerName(), level, marker, msg, args, throwable);
+-    }
+-
+-    private void innerNormalizedLoggingCallHandler(String fqcn, org.slf4j.event.Level level, Marker marker, String msg, Object[] args, Throwable throwable) {
 -        // millis and thread are filled by the constructor
--        LogRecord record = new LogRecord(level, msg);
+-        Level julLevel = slf4jLevelToJULLevel(level);
+-        String formattedMessage = MessageFormatter.basicArrayFormat(msg, args);
+-        LogRecord record = new LogRecord(julLevel, formattedMessage);
+-
+-        // https://jira.qos.ch/browse/SLF4J-13
 -        record.setLoggerName(getName());
--        record.setThrown(t);
+-        record.setThrown(throwable);
 -        // Note: parameters in record are not set because SLF4J only
 -        // supports a single formatting style
--        fillCallerData(callerFQCN, record);
+-        // See also https://jira.qos.ch/browse/SLF4J-10
+-        fillCallerData(fqcn, record);
 -        logger.log(record);
 -    }
 -
--    static String SELF = JDK14LoggerAdapter.class.getName();
--    static String SUPER = MarkerIgnoringBase.class.getName();
+-    @Override
+-    protected String getFullyQualifiedCallerName() {
+-        return SELF;
+-    }
 -
--    private static final boolean FILL_CALLER_DATA = Boolean.getBoolean( "net.md_5.bungee.slf4j-caller-data" );
+-    @Override
+-    public void log(Marker marker, String callerFQCN, int slf4jLevelInt, String message, Object[] arguments, Throwable throwable) {
+-
+-        org.slf4j.event.Level slf4jLevel = org.slf4j.event.Level.intToLevel(slf4jLevelInt);
+-        Level julLevel = slf4jLevelIntToJULLevel(slf4jLevelInt);
+-
+-        if (logger.isLoggable(julLevel)) {
+-            NormalizedParameters np = NormalizedParameters.normalize(message, arguments, throwable);
+-            innerNormalizedLoggingCallHandler(callerFQCN, slf4jLevel, marker, np.getMessage(), np.getArguments(), np.getThrowable());
+-        }
+-    }
 -
 -    /**
 -     * Fill in caller data if possible.
 -     * 
--     * @param record
--     *          The record to update
+-     * @param record The record to update
 -     */
 -    final private void fillCallerData(String callerFQCN, LogRecord record) {
--        if ( !FILL_CALLER_DATA )
--        {
--            return;
--        }
 -        StackTraceElement[] steArray = new Throwable().getStackTrace();
 -
--        int selfIndex = -1;
--        for (int i = 0; i < steArray.length; i++) {
--            final String className = steArray[i].getClassName();
--            if (className.equals(callerFQCN) || className.equals(SUPER)) {
--                selfIndex = i;
--                break;
--            }
--        }
+-        int furthestIndex = findFurthestIndex(callerFQCN, steArray);
 -
--        int found = -1;
--        for (int i = selfIndex + 1; i < steArray.length; i++) {
--            final String className = steArray[i].getClassName();
--            if (!(className.equals(callerFQCN) || className.equals(SUPER))) {
--                found = i;
--                break;
--            }
--        }
--
--        if (found != -1) {
+-        if (furthestIndex != NOT_FOUND) {
+-            int found = furthestIndex+1;
 -            StackTraceElement ste = steArray[found];
 -            // setting the class name has the side effect of setting
 -            // the needToInferCaller variable to false.
@@ -8016,38 +7584,68 @@ index 49589454..00000000
 -        }
 -    }
 -
--    public void log(Marker marker, String callerFQCN, int level, String message, Object[] argArray, Throwable t) {
--        Level julLevel = slf4jLevelIntToJULLevel(level);
--        // the logger.isLoggable check avoids the unconditional
--        // construction of location data for disabled log
--        // statements. As of 2008-07-31, callers of this method
--        // do not perform this check. See also
--        // http://jira.qos.ch/browse/SLF4J-81
--        if (logger.isLoggable(julLevel)) {
--            log(callerFQCN, julLevel, message, t);
+-    // find the furthest index which matches any of the barrier classes
+-    // We assume that the actual caller is at most MAX_SEARCH_DEPTH calls away
+-    private int findFurthestIndex(String callerFQCN, StackTraceElement[] steArray) {
+-
+-        final int maxIndex = Math.min(MAX_SEARCH_DEPTH, steArray.length);
+-        int furthestIndex = NOT_FOUND;
+-
+-        for (int i = 0; i < maxIndex; i++) {
+-            final String className = steArray[i].getClassName();
+-            if (barrierMatch(callerFQCN, className)) {
+-                furthestIndex = i;
+-            }
 -        }
+-        return furthestIndex;
 -    }
 -
--    private Level slf4jLevelIntToJULLevel(int slf4jLevelInt) {
+-   static final int MAX_SEARCH_DEPTH = 12;
+-   static String SELF = JDK14LoggerAdapter.class.getName();
+-
+-    static String SUPER = LegacyAbstractLogger.class.getName();
+-    static String SUPER_OF_SUPER = AbstractLogger.class.getName();
+-    static String SUBSTITUE = SubstituteLogger.class.getName();
+-    static String FLUENT = DefaultLoggingEventBuilder.class.getName();
+-
+-    static String[] BARRIER_CLASSES = new String[] { SUPER_OF_SUPER, SUPER, SELF, SUBSTITUE, FLUENT };
+-
+-    private boolean barrierMatch(String callerFQCN, String candidateClassName) {
+-        if (candidateClassName.equals(callerFQCN))
+-            return true;
+-        for (String barrierClassName : BARRIER_CLASSES) {
+-            if (barrierClassName.equals(candidateClassName)) {
+-                return true;
+-            }
+-        }
+-        return false;
+-    }
+-
+-    private static Level slf4jLevelIntToJULLevel(int levelInt) {
+-        org.slf4j.event.Level slf4jLevel = org.slf4j.event.Level.intToLevel(levelInt);
+-        return slf4jLevelToJULLevel(slf4jLevel);
+-    }
+-
+-    private static Level slf4jLevelToJULLevel(org.slf4j.event.Level slf4jLevel) {
 -        Level julLevel;
--        switch (slf4jLevelInt) {
--        case LocationAwareLogger.TRACE_INT:
+-        switch (slf4jLevel) {
+-        case TRACE:
 -            julLevel = Level.FINEST;
 -            break;
--        case LocationAwareLogger.DEBUG_INT:
+-        case DEBUG:
 -            julLevel = Level.FINE;
 -            break;
--        case LocationAwareLogger.INFO_INT:
+-        case INFO:
 -            julLevel = Level.INFO;
 -            break;
--        case LocationAwareLogger.WARN_INT:
+-        case WARN:
 -            julLevel = Level.WARNING;
 -            break;
--        case LocationAwareLogger.ERROR_INT:
+-        case ERROR:
 -            julLevel = Level.SEVERE;
 -            break;
 -        default:
--            throw new IllegalStateException("Level number " + slf4jLevelInt + " is not recognized.");
+-            throw new IllegalStateException("Level " + slf4jLevel + " is not recognized.");
 -        }
 -        return julLevel;
 -    }
@@ -8056,7 +7654,9 @@ index 49589454..00000000
 -     * @since 1.7.15
 -     */
 -    public void log(LoggingEvent event) {
--        Level julLevel = slf4jLevelIntToJULLevel(event.getLevel().toInt());
+-        // assumes that the invocation is made from a substitute logger
+-        // this assumption might change in the future with the advent of a fluent API
+-        Level julLevel = slf4jLevelToJULLevel(event.getLevel());
 -        if (logger.isLoggable(julLevel)) {
 -            LogRecord record = eventToRecord(event, julLevel);
 -            logger.log(record);
@@ -8086,13 +7686,14 @@ index 49589454..00000000
 -        record.setThrown(t);
 -        return record;
 -    }
+-
 -}
-diff --git a/slf4j/src/main/java/org/slf4j/impl/JDK14LoggerFactory.java b/slf4j/src/main/java/org/slf4j/impl/JDK14LoggerFactory.java
+diff --git a/slf4j/src/main/java/org/slf4j/jul/JDK14LoggerFactory.java b/slf4j/src/main/java/org/slf4j/jul/JDK14LoggerFactory.java
 deleted file mode 100644
-index 2d6eaaf8..00000000
---- a/slf4j/src/main/java/org/slf4j/impl/JDK14LoggerFactory.java
+index 6788fbe7..00000000
+--- a/slf4j/src/main/java/org/slf4j/jul/JDK14LoggerFactory.java
 +++ /dev/null
-@@ -1,73 +0,0 @@
+@@ -1,79 +0,0 @@
 -/**
 - * Copyright (c) 2004-2011 QOS.ch
 - * All rights reserved.
@@ -8117,7 +7718,7 @@ index 2d6eaaf8..00000000
 - * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 - *
 - */
--package org.slf4j.impl;
+-package org.slf4j.jul;
 -
 -import org.slf4j.Logger;
 -import org.slf4j.ILoggerFactory;
@@ -8137,10 +7738,16 @@ index 2d6eaaf8..00000000
 -    ConcurrentMap<String, Logger> loggerMap;
 -    public static java.util.logging.Logger LOGGER; // BungeeCord
 -
+-    /**
+-     * the root logger is called "" in JUL
+-     */
+-    private static String JUL_ROOT_LOGGER_NAME = "";
+-    
 -    public JDK14LoggerFactory() {
--        loggerMap = new ConcurrentHashMap<String, Logger>();
--        // ensure jul initialization. see SLF4J-359 
--        // note that call to java.util.logging.LogManager.getLogManager() fails on the Google App Engine platform. See SLF4J-363
+-        loggerMap = new ConcurrentHashMap<>();
+-        // ensure jul initialization. see SLF4J-359
+-        // note that call to java.util.logging.LogManager.getLogManager() fails on the Google App Engine platform. See
+-        // SLF4J-363
 -        java.util.logging.Logger.getLogger("");
 -    }
 -
@@ -8152,7 +7759,7 @@ index 2d6eaaf8..00000000
 -    public Logger getLogger(String name) {
 -        // the root logger is called "" in JUL
 -        if (name.equalsIgnoreCase(Logger.ROOT_LOGGER_NAME)) {
--            name = "";
+-            name = JUL_ROOT_LOGGER_NAME;
 -        }
 -
 -        Logger slf4jLogger = loggerMap.get(name);
@@ -8166,249 +7773,74 @@ index 2d6eaaf8..00000000
 -        }
 -    }
 -}
-diff --git a/slf4j/src/main/java/org/slf4j/impl/StaticLoggerBinder.java b/slf4j/src/main/java/org/slf4j/impl/StaticLoggerBinder.java
+diff --git a/slf4j/src/main/java/org/slf4j/jul/JULServiceProvider.java b/slf4j/src/main/java/org/slf4j/jul/JULServiceProvider.java
 deleted file mode 100644
-index ebf8ae11..00000000
---- a/slf4j/src/main/java/org/slf4j/impl/StaticLoggerBinder.java
+index 15f492f1..00000000
+--- a/slf4j/src/main/java/org/slf4j/jul/JULServiceProvider.java
 +++ /dev/null
-@@ -1,80 +0,0 @@
--/**
-- * Copyright (c) 2004-2011 QOS.ch
-- * All rights reserved.
-- *
-- * Permission is hereby granted, free  of charge, to any person obtaining
-- * a  copy  of this  software  and  associated  documentation files  (the
-- * "Software"), to  deal in  the Software without  restriction, including
-- * without limitation  the rights to  use, copy, modify,  merge, publish,
-- * distribute,  sublicense, and/or sell  copies of  the Software,  and to
-- * permit persons to whom the Software  is furnished to do so, subject to
-- * the following conditions:
-- *
-- * The  above  copyright  notice  and  this permission  notice  shall  be
-- * included in all copies or substantial portions of the Software.
-- *
-- * THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
-- * EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
-- * MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-- * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
-- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-- *
-- */
--package org.slf4j.impl;
+@@ -1,54 +0,0 @@
+-package org.slf4j.jul;
 -
 -import org.slf4j.ILoggerFactory;
--import org.slf4j.LoggerFactory;
--import org.slf4j.spi.LoggerFactoryBinder;
+-import org.slf4j.IMarkerFactory;
+-import org.slf4j.helpers.BasicMDCAdapter;
+-import org.slf4j.helpers.BasicMarkerFactory;
+-import org.slf4j.spi.MDCAdapter;
+-import org.slf4j.spi.SLF4JServiceProvider;
 -
--/**
-- * The binding of {@link LoggerFactory} class with an actual instance of 
-- * {@link ILoggerFactory} is performed using information returned by this class. 
-- * 
-- * @author Ceki G&uuml;lc&uuml;
-- */
--public class StaticLoggerBinder implements LoggerFactoryBinder {
+-public class JULServiceProvider implements SLF4JServiceProvider {
 -
 -    /**
--     * The unique instance of this class.
--     * 
--     */
--    private static final StaticLoggerBinder SINGLETON = new StaticLoggerBinder();
--
--    /**
--     * Return the singleton of this class.
--     * 
--     * @return the StaticLoggerBinder singleton
--     */
--    public static final StaticLoggerBinder getSingleton() {
--        return SINGLETON;
--    }
--
--    /**
--     * Declare the version of the SLF4J API this implementation is compiled against. 
--     * The value of this field is modified with each major release. 
+-     * Declare the version of the SLF4J API this implementation is compiled
+-     * against. The value of this field is modified with each major release.
 -     */
 -    // to avoid constant folding by the compiler, this field must *not* be final
--    public static String REQUESTED_API_VERSION = "1.6.99"; // !final
+-    public static String REQUESTED_API_VERSION = "2.0.99"; // !final
 -
--    private static final String loggerFactoryClassStr = org.slf4j.impl.JDK14LoggerFactory.class.getName();
+-    private ILoggerFactory loggerFactory;
+-    // LoggerFactory expects providers to initialize markerFactory as early as possible.
+-    private final IMarkerFactory markerFactory;
+-    // LoggerFactory expects providers to initialize their MDCAdapter field
+-    // as early as possible, preferably at construction time.
+-    private final MDCAdapter mdcAdapter;
 -
--    /** The ILoggerFactory instance returned by the {@link #getLoggerFactory} method
--     * should always be the same object
--     */
--    private final ILoggerFactory loggerFactory;
--
--    private StaticLoggerBinder() {
--        // Note: JCL gets substituted at build time by an appropriate Ant task
--        loggerFactory = new org.slf4j.impl.JDK14LoggerFactory();
+-    public JULServiceProvider() {
+-        markerFactory = new BasicMarkerFactory();
+-        mdcAdapter = new BasicMDCAdapter();
 -    }
 -
+-    @Override
 -    public ILoggerFactory getLoggerFactory() {
 -        return loggerFactory;
 -    }
 -
--    public String getLoggerFactoryClassStr() {
--        return loggerFactoryClassStr;
--    }
--}
-diff --git a/slf4j/src/main/java/org/slf4j/impl/StaticMDCBinder.java b/slf4j/src/main/java/org/slf4j/impl/StaticMDCBinder.java
-deleted file mode 100644
-index 0a1dcb4c..00000000
---- a/slf4j/src/main/java/org/slf4j/impl/StaticMDCBinder.java
-+++ /dev/null
-@@ -1,68 +0,0 @@
--/**
-- * Copyright (c) 2004-2011 QOS.ch
-- * All rights reserved.
-- *
-- * Permission is hereby granted, free  of charge, to any person obtaining
-- * a  copy  of this  software  and  associated  documentation files  (the
-- * "Software"), to  deal in  the Software without  restriction, including
-- * without limitation  the rights to  use, copy, modify,  merge, publish,
-- * distribute,  sublicense, and/or sell  copies of  the Software,  and to
-- * permit persons to whom the Software  is furnished to do so, subject to
-- * the following conditions:
-- *
-- * The  above  copyright  notice  and  this permission  notice  shall  be
-- * included in all copies or substantial portions of the Software.
-- *
-- * THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
-- * EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
-- * MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-- * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
-- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-- *
-- */
--package org.slf4j.impl;
--
--import org.slf4j.helpers.BasicMDCAdapter;
--import org.slf4j.spi.MDCAdapter;
--
--/**
-- * This implementation is bound to {@link BasicMDCAdapter}.
-- *
-- * @author Ceki G&uuml;lc&uuml;
-- */
--public class StaticMDCBinder {
--
--    /**
--     * The unique instance of this class.
--     */
--    public static final StaticMDCBinder SINGLETON = new StaticMDCBinder();
--
--    private StaticMDCBinder() {
--    }
--
--    /**
--     * Return the singleton of this class.
--     * 
--     * @return the StaticMDCBinder singleton
--     * @since 1.7.14
--     */
--    public static final StaticMDCBinder getSingleton() {
--        return SINGLETON;
--    }
--
--    /**
--     * Currently this method always returns an instance of 
--     * {@link BasicMDCAdapter}.
--     */
--    public MDCAdapter getMDCA() {
--        // note that this method is invoked only from within the static initializer of
--        // the org.slf4j.MDC class.
--        return new BasicMDCAdapter();
--    }
--
--    public String getMDCAdapterClassStr() {
--        return BasicMDCAdapter.class.getName();
--    }
--}
-diff --git a/slf4j/src/main/java/org/slf4j/impl/StaticMarkerBinder.java b/slf4j/src/main/java/org/slf4j/impl/StaticMarkerBinder.java
-deleted file mode 100644
-index 21a48df6..00000000
---- a/slf4j/src/main/java/org/slf4j/impl/StaticMarkerBinder.java
-+++ /dev/null
-@@ -1,77 +0,0 @@
--/**
-- * Copyright (c) 2004-2011 QOS.ch
-- * All rights reserved.
-- *
-- * Permission is hereby granted, free  of charge, to any person obtaining
-- * a  copy  of this  software  and  associated  documentation files  (the
-- * "Software"), to  deal in  the Software without  restriction, including
-- * without limitation  the rights to  use, copy, modify,  merge, publish,
-- * distribute,  sublicense, and/or sell  copies of  the Software,  and to
-- * permit persons to whom the Software  is furnished to do so, subject to
-- * the following conditions:
-- *
-- * The  above  copyright  notice  and  this permission  notice  shall  be
-- * included in all copies or substantial portions of the Software.
-- *
-- * THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
-- * EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
-- * MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-- * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
-- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-- *
-- */
--package org.slf4j.impl;
--
--import org.slf4j.IMarkerFactory;
--import org.slf4j.MarkerFactory;
--import org.slf4j.helpers.BasicMarkerFactory;
--import org.slf4j.spi.MarkerFactoryBinder;
--
--/**
-- * 
-- * The binding of {@link MarkerFactory} class with an actual instance of 
-- * {@link IMarkerFactory} is performed using information returned by this class. 
-- * 
-- * @author Ceki G&uuml;lc&uuml;
-- */
--public class StaticMarkerBinder implements MarkerFactoryBinder {
--
--    /**
--     * The unique instance of this class.
--     */
--    public static final StaticMarkerBinder SINGLETON = new StaticMarkerBinder();
--
--    final IMarkerFactory markerFactory = new BasicMarkerFactory();
--
--    private StaticMarkerBinder() {
--    }
--
--    /**
--     * Return the singleton of this class.
--     * 
--     * @return the StaticMarkerBinder singleton
--     * @since 1.7.14
--     */
--    public static StaticMarkerBinder getSingleton() {
--        return SINGLETON;
--    }
--
--    /**
--     * Currently this method always returns an instance of 
--     * {@link BasicMarkerFactory}.
--     */
+-    @Override
 -    public IMarkerFactory getMarkerFactory() {
 -        return markerFactory;
 -    }
 -
--    /**
--     * Currently, this method returns the class name of
--     * {@link BasicMarkerFactory}.
--     */
--    public String getMarkerFactoryClassStr() {
--        return BasicMarkerFactory.class.getName();
+-    public MDCAdapter getMDCAdapter() {
+-        return mdcAdapter;
 -    }
 -
+-    @Override
+-    public String getRequestedApiVersion() {
+-        return REQUESTED_API_VERSION;
+-    }
+-
+-    @Override
+-    public void initialize() {
+-        loggerFactory = new JDK14LoggerFactory();
+-    }
 -}
+diff --git a/slf4j/src/main/resources/META-INF/services/org.slf4j.spi.SLF4JServiceProvider b/slf4j/src/main/resources/META-INF/services/org.slf4j.spi.SLF4JServiceProvider
+deleted file mode 100644
+index 8d062b2f..00000000
+--- a/slf4j/src/main/resources/META-INF/services/org.slf4j.spi.SLF4JServiceProvider
++++ /dev/null
+@@ -1 +0,0 @@
+-org.slf4j.jul.JULServiceProvider
+\ No newline at end of file
 -- 
 2.45.2.windows.1
 
