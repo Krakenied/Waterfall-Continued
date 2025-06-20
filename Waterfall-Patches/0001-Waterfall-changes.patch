@@ -1,6 +1,6 @@
-From bed377d4bd81a308502d8f605d7634d981f2eade Mon Sep 17 00:00:00 2001
+From 7e6c53cadbd52352a6c0a12adc2125b02ce7ee84 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
-Date: Tue, 17 Jun 2025 16:13:57 +0200
+Date: Fri, 20 Jun 2025 11:37:01 +0200
 Subject: [PATCH] Waterfall changes
 
 MIT License
@@ -4154,28 +4154,19 @@ index 6c4e6735..7fc95fce 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index 82d5f1e8..edf78be4 100644
+index 4e40c699..9c824dcf 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-@@ -50,7 +50,7 @@ public class ProtocolConstants
-     public static final int MINECRAFT_1_21_2 = 768;
-     public static final int MINECRAFT_1_21_4 = 769;
-     public static final int MINECRAFT_1_21_5 = 770;
--    public static final int MINECRAFT_1_21_6 = 1073742078;
-+    public static final int MINECRAFT_1_21_6 = 771;
-     public static final List<String> SUPPORTED_VERSIONS;
-     public static final List<Integer> SUPPORTED_VERSION_IDS;
- 
-@@ -118,7 +118,7 @@ public class ProtocolConstants
-                 ProtocolConstants.MINECRAFT_1_21_5
+@@ -119,7 +119,7 @@ public class ProtocolConstants
+                 ProtocolConstants.MINECRAFT_1_21_6
          );
  
 -        if ( SNAPSHOT_SUPPORT )
 +        if ( true || SNAPSHOT_SUPPORT )
          {
              // supportedVersions.add( "1.21.x" );
-             supportedVersionIds.add( ProtocolConstants.MINECRAFT_1_21_6 );
-@@ -128,6 +128,16 @@ public class ProtocolConstants
+             // supportedVersionIds.add( ProtocolConstants.MINECRAFT_1_21_6 );
+@@ -129,6 +129,16 @@ public class ProtocolConstants
          SUPPORTED_VERSION_IDS = supportedVersionIds.build();
      }
  
