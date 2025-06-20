@@ -1,4 +1,4 @@
-From 7e6c53cadbd52352a6c0a12adc2125b02ce7ee84 Mon Sep 17 00:00:00 2001
+From 320cb55fd2f83ca21fd234b9c28130510ab2edea Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Fri, 20 Jun 2025 11:37:01 +0200
 Subject: [PATCH] Waterfall changes
@@ -1689,7 +1689,7 @@ similarity index 100%
 rename from proxy/src/main/java/net/md_5/bungee/connection/LoginResult.java
 rename to api/src/main/java/net/md_5/bungee/connection/LoginResult.java
 diff --git a/bootstrap/pom.xml b/bootstrap/pom.xml
-index b54ca5bf..14a154aa 100644
+index 5a8b37b0..45405835 100644
 --- a/bootstrap/pom.xml
 +++ b/bootstrap/pom.xml
 @@ -4,39 +4,40 @@
@@ -1744,7 +1744,7 @@ index b54ca5bf..14a154aa 100644
          <plugins>
              <plugin>
                  <groupId>org.apache.maven.plugins</groupId>
-@@ -45,9 +46,12 @@
+@@ -45,10 +46,12 @@
                  <configuration>
                      <archive>
                          <manifestEntries>
@@ -1752,13 +1752,13 @@ index b54ca5bf..14a154aa 100644
 +                            <Main-Class>net.md_5.bungee.Bootstrap</Main-Class>
                              <Implementation-Version>${describe}</Implementation-Version>
                              <Specification-Version>${maven.build.timestamp}</Specification-Version>
-+
+                             <Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
 +                            <!-- Log4j includes custom classes for Java 9+ (#293) -->
 +                            <Multi-Release>true</Multi-Release>
                          </manifestEntries>
                      </archive>
                  </configuration>
-@@ -75,7 +79,17 @@
+@@ -76,7 +79,17 @@
                              </excludes>
                          </filter>
                      </filters>
@@ -3523,7 +3523,7 @@ index 8beec32c..023ce639 100644
          <license>
              <name>BSD-3-Clause</name>
 diff --git a/pom.xml b/pom.xml
-index 6f938954..70bdee0c 100644
+index e5b4af03..b51580d5 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
