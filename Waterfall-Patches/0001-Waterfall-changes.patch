@@ -1,4 +1,4 @@
-From 320cb55fd2f83ca21fd234b9c28130510ab2edea Mon Sep 17 00:00:00 2001
+From 3f9cf4fd35289c64556ab7a819a3790ba5fc572d Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Fri, 20 Jun 2025 11:37:01 +0200
 Subject: [PATCH] Waterfall changes
@@ -6166,7 +6166,7 @@ index 25ef7ff5..3d97d674 100644
              SocketAddress address = Util.getAddr( addr );
              ServerInfo info = ProxyServer.getInstance().constructServerInfo( name, address, motd, restricted );
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
-index aa5b5bc6..ee9257f6 100644
+index fdb5cd46..b71958ac 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
 @@ -172,8 +172,14 @@ public class DownstreamBridge extends PacketHandler
@@ -6478,7 +6478,7 @@ index fa1f2bef..294860ed 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index dc7b643a..264cb648 100644
+index dc7b643a..e905d237 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 @@ -54,6 +54,8 @@ public class UpstreamBridge extends PacketHandler
@@ -6510,7 +6510,7 @@ index dc7b643a..264cb648 100644
 +        // Waterfall start
 +        return handleChat(message, null);
 +    }
-+    private String handleChat(String message, @javax.annotation.Nullable ClientCommand clientCommand)
++    private String handleChat(String message, ClientCommand clientCommand)
 +    // Waterfall end
      {
          for ( int index = 0, length = message.length(); index < length; index++ )
