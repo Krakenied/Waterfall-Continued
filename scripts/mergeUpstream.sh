@@ -12,7 +12,7 @@ function update {
 }
 
 update BungeeCord
-#update Waterfall
+update Waterfall
 
 # Update submodules
 git submodule update --recursive
