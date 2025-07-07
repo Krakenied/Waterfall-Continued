@@ -1,6 +1,6 @@
-From 60f2956a384213eb77de96503bae382b87a95cf7 Mon Sep 17 00:00:00 2001
+From 4b27b18863beca04abed261d77ee22ded867f783 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
-Date: Mon, 30 Jun 2025 17:01:49 +0200
+Date: Mon, 7 Jul 2025 22:17:04 +0200
 Subject: [PATCH] Waterfall changes
 
 MIT License
@@ -2483,18 +2483,18 @@ index 7e7b25cb..32883016 100644
      <packaging>jar</packaging>
  
 diff --git a/module/cmd-server/src/main/java/net/md_5/bungee/module/cmd/server/CommandServer.java b/module/cmd-server/src/main/java/net/md_5/bungee/module/cmd/server/CommandServer.java
-index 59c104d3..698b420f 100644
+index f479a888..7d114541 100644
 --- a/module/cmd-server/src/main/java/net/md_5/bungee/module/cmd/server/CommandServer.java
 +++ b/module/cmd-server/src/main/java/net/md_5/bungee/module/cmd/server/CommandServer.java
-@@ -83,7 +83,7 @@ public class CommandServer extends Command implements TabExecutor
-     @Override
+@@ -80,7 +80,7 @@ public class CommandServer extends Command implements TabExecutor
      public Iterable<String> onTabComplete(final CommandSender sender, final String[] args)
      {
--        return ( args.length > 1 ) ? Collections.EMPTY_LIST : Iterables.transform( Iterables.filter( ProxyServer.getInstance().getServers().values(), new Predicate<ServerInfo>()
-+        return ( args.length > 1 ) ? Collections.EMPTY_LIST : Iterables.transform( Iterables.filter( ProxyServer.getInstance().getServersCopy().values(), new Predicate<ServerInfo>() // Waterfall: use #getServersCopy()
-         {
-             private final String lower = ( args.length == 0 ) ? "" : args[0].toLowerCase( Locale.ROOT );
- 
+         final String serverFilter = ( args.length == 0 ) ? "" : args[0].toLowerCase( Locale.ROOT );
+-        return () -> ProxyServer.getInstance().getServers().values().stream()
++        return () -> ProxyServer.getInstance().getServersCopy().values().stream() // Waterfall: use #getServersCopy()
+                 .filter( serverInfo -> serverInfo.getName().toLowerCase( Locale.ROOT ).startsWith( serverFilter ) && serverInfo.canAccess( sender ) )
+                 .map( ServerInfo::getName )
+                 .iterator();
 diff --git a/module/pom.xml b/module/pom.xml
 index ae84341c..1f35de0e 100644
 --- a/module/pom.xml
@@ -3523,7 +3523,7 @@ index 8beec32c..023ce639 100644
          <license>
              <name>BSD-3-Clause</name>
 diff --git a/pom.xml b/pom.xml
-index e5b4af03..b51580d5 100644
+index 772ea6d7..b51580d5 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -3615,12 +3615,12 @@ index e5b4af03..b51580d5 100644
  
      <distributionManagement>
 -        <snapshotRepository>
--            <id>sonatype-nexus-snapshots</id>
--            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+-            <id>central-portal-snapshots</id>
+-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
 -        </snapshotRepository>
          <repository>
--            <id>sonatype-nexus-staging</id>
--            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+-            <id>ossrh-staging-api</id>
+-            <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
 +            <id>papermc-releases</id>
 +            <url>https://repo.papermc.io/repository/maven-releases/</url>
          </repository>
@@ -3788,21 +3788,20 @@ index 6c0ef4df..076ddd70 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java b/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
-index 1ccca2f0..1942b998 100644
+index 1ccca2f0..f11e9f37 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
-@@ -80,6 +80,10 @@ public abstract class DefinedPacket
+@@ -80,6 +80,9 @@ public abstract class DefinedPacket
          }
      }
  
 +    public static final boolean PROCESS_TRACES = Boolean.getBoolean("waterfall.bad-packet-traces");
 +    private static final OverflowPacketException OVERSIZED_VAR_INT_EXCEPTION = new OverflowPacketException( "VarInt too big" );
 +    private static final BadPacketException NO_MORE_BYTES_EXCEPTION = new BadPacketException("No more bytes reading varint");
-+
      public static void writeString(String s, ByteBuf buf)
      {
          writeString( s, buf, Short.MAX_VALUE );
-@@ -121,6 +125,7 @@ public abstract class DefinedPacket
+@@ -121,6 +124,7 @@ public abstract class DefinedPacket
          int len = readVarInt( buf );
          if ( len > maxLen * 3 )
          {
@@ -3810,7 +3809,7 @@ index 1ccca2f0..1942b998 100644
              throw new OverflowPacketException( "Cannot receive string longer than " + maxLen * 3 + " (got " + len + " bytes)" );
          }
  
-@@ -129,6 +134,7 @@ public abstract class DefinedPacket
+@@ -129,6 +133,7 @@ public abstract class DefinedPacket
  
          if ( s.length() > maxLen )
          {
@@ -3818,7 +3817,7 @@ index 1ccca2f0..1942b998 100644
              throw new OverflowPacketException( "Cannot receive string longer than " + maxLen + " (got " + s.length() + " characters)" );
          }
  
-@@ -282,13 +288,18 @@ public abstract class DefinedPacket
+@@ -282,13 +287,18 @@ public abstract class DefinedPacket
          byte in;
          while ( true )
          {
@@ -3838,7 +3837,7 @@ index 1ccca2f0..1942b998 100644
              }
  
              if ( ( in & 0x80 ) != 0x80 )
-@@ -626,4 +637,21 @@ public abstract class DefinedPacket
+@@ -626,4 +636,21 @@ public abstract class DefinedPacket
  
      @Override
      public abstract String toString();
@@ -4097,10 +4096,10 @@ index 237955ab..d0bd4d75 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-index dd49fb1a..b4d980b5 100644
+index dea027b0..ea84ad15 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-@@ -651,6 +651,13 @@ public enum Protocol
+@@ -652,6 +652,13 @@ public enum Protocol
                      map( ProtocolConstants.MINECRAFT_1_21_2, 0x07 ),
                      map( ProtocolConstants.MINECRAFT_1_21_6, 0x08 )
              );
@@ -4114,7 +4113,7 @@ index dd49fb1a..b4d980b5 100644
              TO_SERVER.registerPacket(
                      TabCompleteRequest.class,
                      TabCompleteRequest::new,
-@@ -1035,14 +1042,23 @@ public enum Protocol
+@@ -1036,14 +1043,23 @@ public enum Protocol
              return protocol;
          }
  
@@ -4139,7 +4138,7 @@ index dd49fb1a..b4d980b5 100644
              {
                  throw new BadPacketException( "Packet with id " + id + " outside of range" );
              }
-@@ -1121,9 +1137,12 @@ public enum Protocol
+@@ -1122,9 +1138,12 @@ public enum Protocol
              {
                  throw new BadPacketException( "Unsupported protocol version" );
              }
@@ -4155,18 +4154,9 @@ index dd49fb1a..b4d980b5 100644
      }
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-index eae98554..5405096c 100644
+index eae98554..f8be48b9 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/ProtocolConstants.java
-@@ -121,7 +121,7 @@ public class ProtocolConstants
-                 ProtocolConstants.MINECRAFT_1_21_7
-         );
- 
--        if ( SNAPSHOT_SUPPORT )
-+        if ( true || SNAPSHOT_SUPPORT )
-         {
-             // supportedVersions.add( "1.21.x" );
-             // supportedVersionIds.add( ProtocolConstants.MINECRAFT_1_21_6 );
 @@ -131,6 +131,16 @@ public class ProtocolConstants
          SUPPORTED_VERSION_IDS = supportedVersionIds.build();
      }
@@ -6479,7 +6469,7 @@ index fa1f2bef..294860ed 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index dc7b643a..264cb648 100644
+index dc7b643a..e905d237 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 @@ -54,6 +54,8 @@ public class UpstreamBridge extends PacketHandler
@@ -6511,7 +6501,7 @@ index dc7b643a..264cb648 100644
 +        // Waterfall start
 +        return handleChat(message, null);
 +    }
-+    private String handleChat(String message, @javax.annotation.Nullable ClientCommand clientCommand)
++    private String handleChat(String message, ClientCommand clientCommand)
 +    // Waterfall end
      {
          for ( int index = 0, length = message.length(); index < length; index++ )
@@ -7278,10 +7268,10 @@ index 2fc59d79..0d115f3a 100644
              <scope>compile</scope>
          </dependency>
 diff --git a/serializer/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java b/serializer/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
-index 47e84cd6..f330a625 100644
+index 8f95ae49..b7acaf57 100644
 --- a/serializer/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
 +++ b/serializer/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
-@@ -682,6 +682,26 @@ public class ComponentsTest
+@@ -689,6 +689,26 @@ public class ComponentsTest
          assertEquals( testClickEvent, extraGetter.apply( eventRetention, 1 ).getClickEvent() );
      }
  
