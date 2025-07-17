@@ -1,4 +1,4 @@
-From 4b27b18863beca04abed261d77ee22ded867f783 Mon Sep 17 00:00:00 2001
+From 59c6bd2682ada900c67d0fa534d096c6b00f355f Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Mon, 7 Jul 2025 22:17:04 +0200
 Subject: [PATCH] Waterfall changes
@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 diff --git a/api/pom.xml b/api/pom.xml
-index bc3de477..74a835d1 100644
+index 11bdc806..fe3d2bc9 100644
 --- a/api/pom.xml
 +++ b/api/pom.xml
 @@ -4,48 +4,48 @@
@@ -3523,7 +3523,7 @@ index 8beec32c..023ce639 100644
          <license>
              <name>BSD-3-Clause</name>
 diff --git a/pom.xml b/pom.xml
-index 772ea6d7..b51580d5 100644
+index 548700d2..2b860eee 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,18 @@
@@ -3788,10 +3788,10 @@ index 6c0ef4df..076ddd70 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java b/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
-index 1ccca2f0..f11e9f37 100644
+index 122197e1..0480c8f1 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/DefinedPacket.java
-@@ -80,6 +80,9 @@ public abstract class DefinedPacket
+@@ -85,6 +85,9 @@ public abstract class DefinedPacket
          }
      }
  
@@ -3801,7 +3801,7 @@ index 1ccca2f0..f11e9f37 100644
      public static void writeString(String s, ByteBuf buf)
      {
          writeString( s, buf, Short.MAX_VALUE );
-@@ -121,6 +124,7 @@ public abstract class DefinedPacket
+@@ -126,6 +129,7 @@ public abstract class DefinedPacket
          int len = readVarInt( buf );
          if ( len > maxLen * 3 )
          {
@@ -3809,7 +3809,7 @@ index 1ccca2f0..f11e9f37 100644
              throw new OverflowPacketException( "Cannot receive string longer than " + maxLen * 3 + " (got " + len + " bytes)" );
          }
  
-@@ -129,6 +133,7 @@ public abstract class DefinedPacket
+@@ -133,6 +137,7 @@ public abstract class DefinedPacket
  
          if ( s.length() > maxLen )
          {
@@ -3817,7 +3817,7 @@ index 1ccca2f0..f11e9f37 100644
              throw new OverflowPacketException( "Cannot receive string longer than " + maxLen + " (got " + s.length() + " characters)" );
          }
  
-@@ -282,13 +287,18 @@ public abstract class DefinedPacket
+@@ -286,13 +291,18 @@ public abstract class DefinedPacket
          byte in;
          while ( true )
          {
@@ -3837,7 +3837,7 @@ index 1ccca2f0..f11e9f37 100644
              }
  
              if ( ( in & 0x80 ) != 0x80 )
-@@ -626,4 +636,21 @@ public abstract class DefinedPacket
+@@ -630,4 +640,21 @@ public abstract class DefinedPacket
  
      @Override
      public abstract String toString();
@@ -4277,7 +4277,7 @@ index 00000000..08ecf2a3
 +    }
 +}
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java b/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
-index f86fcd08..40df53fe 100644
+index 31104505..48b20a7e 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/packet/ClientCommand.java
 @@ -119,4 +119,9 @@ public class ClientCommand extends DefinedPacket
@@ -4406,7 +4406,7 @@ index 00000000..7ed2dc3a
 +    }
 +}
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/packet/LoginRequest.java b/protocol/src/main/java/net/md_5/bungee/protocol/packet/LoginRequest.java
-index e62a3a03..9789215c 100644
+index d9cadc25..5d32ede3 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/packet/LoginRequest.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/packet/LoginRequest.java
 @@ -71,4 +71,13 @@ public class LoginRequest extends DefinedPacket
@@ -5517,7 +5517,7 @@ index eabf7573..00000000
 -    }
 -}
 diff --git a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
-index d47f5ef9..7c6a2e65 100644
+index 7dec06d4..04853fb0 100644
 --- a/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 +++ b/proxy/src/main/java/net/md_5/bungee/ServerConnector.java
 @@ -7,6 +7,7 @@ import io.netty.buffer.ByteBufAllocator;
@@ -5675,7 +5675,7 @@ index d47f5ef9..7c6a2e65 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 9d2e05f8..d80d6b07 100644
+index 0e01e4c8..75f5bc20 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -6106,7 +6106,7 @@ index b16d24e1..1f600dab 100644
 +    // Waterfall end
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java b/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
-index 25ef7ff5..3d97d674 100644
+index 65d782f7..f8df7d10 100644
 --- a/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
 +++ b/proxy/src/main/java/net/md_5/bungee/conf/YamlConfig.java
 @@ -46,10 +46,15 @@ public class YamlConfig implements ConfigurationAdapter
@@ -6292,7 +6292,7 @@ index fdb5cd46..b71958ac 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
-index fa1f2bef..294860ed 100644
+index b2c9926b..c5302868 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/InitialHandler.java
 @@ -24,6 +24,8 @@ import javax.crypto.SecretKey;
@@ -6469,7 +6469,7 @@ index fa1f2bef..294860ed 100644
              }
          } else if ( input.getTag().equals( "UNREGISTER" ) || input.getTag().equals( "minecraft:unregister" ) )
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
-index dc7b643a..e905d237 100644
+index a6fb000d..707e1ff2 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/UpstreamBridge.java
 @@ -54,6 +54,8 @@ public class UpstreamBridge extends PacketHandler
