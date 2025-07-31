@@ -1,4 +1,4 @@
-From 59c6bd2682ada900c67d0fa534d096c6b00f355f Mon Sep 17 00:00:00 2001
+From c7db077040ea54e04c0d9339303516e14e5505b4 Mon Sep 17 00:00:00 2001
 From: Krakenied <krakenied1@gmail.com>
 Date: Mon, 7 Jul 2025 22:17:04 +0200
 Subject: [PATCH] Waterfall changes
@@ -1319,10 +1319,10 @@ index e582808f..29cd91dd 100644
      }
  
 diff --git a/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java b/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java
-index 1c0714f4..a6657bf3 100644
+index d4831f7f..7591b98f 100644
 --- a/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java
 +++ b/api/src/main/java/net/md_5/bungee/api/connection/ProxiedPlayer.java
-@@ -129,6 +129,38 @@ public interface ProxiedPlayer extends Connection, CommandSender
+@@ -131,6 +131,38 @@ public interface ProxiedPlayer extends Connection, CommandSender
       */
      void connect(ServerInfo target, Callback<Boolean> callback);
  
@@ -1361,7 +1361,7 @@ index 1c0714f4..a6657bf3 100644
      /**
       * Connects / transfers this user to the specified connection, gracefully
       * closing the current one. Depending on the implementation, this method
-@@ -142,6 +174,25 @@ public interface ProxiedPlayer extends Connection, CommandSender
+@@ -144,6 +176,25 @@ public interface ProxiedPlayer extends Connection, CommandSender
       */
      void connect(ServerInfo target, Callback<Boolean> callback, ServerConnectEvent.Reason reason);
  
@@ -1542,7 +1542,7 @@ index 2286a1ab..3d1e9a3a 100644
  
      //
 diff --git a/api/src/main/java/net/md_5/bungee/api/plugin/PluginManager.java b/api/src/main/java/net/md_5/bungee/api/plugin/PluginManager.java
-index b159456f..d25ab60f 100644
+index b16fda4a..db27ce87 100644
 --- a/api/src/main/java/net/md_5/bungee/api/plugin/PluginManager.java
 +++ b/api/src/main/java/net/md_5/bungee/api/plugin/PluginManager.java
 @@ -30,6 +30,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -5675,7 +5675,7 @@ index 7dec06d4..04853fb0 100644
      }
  }
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 0e01e4c8..75f5bc20 100644
+index fad6835d..e2361011 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -5688,7 +5688,7 @@ index 0e01e4c8..75f5bc20 100644
  import io.netty.bootstrap.Bootstrap;
  import io.netty.channel.ChannelFuture;
  import io.netty.channel.ChannelFutureListener;
-@@ -139,6 +141,10 @@ public final class UserConnection implements ProxiedPlayer
+@@ -142,6 +144,10 @@ public final class UserConnection implements ProxiedPlayer
      private final Scoreboard serverSentScoreboard = new Scoreboard();
      @Getter
      private final Collection<UUID> sentBossBars = new HashSet<>();
@@ -5699,7 +5699,7 @@ index 0e01e4c8..75f5bc20 100644
      @Getter
      @Setter
      private String lastCommandTabbed;
-@@ -198,9 +204,12 @@ public final class UserConnection implements ProxiedPlayer
+@@ -201,9 +207,12 @@ public final class UserConnection implements ProxiedPlayer
  
          forgeClientHandler = new ForgeClientHandler( this );
  
@@ -5714,7 +5714,7 @@ index 0e01e4c8..75f5bc20 100644
          return BungeeCord.getInstance().addConnection( this );
      }
  
-@@ -323,9 +332,24 @@ public final class UserConnection implements ProxiedPlayer
+@@ -326,9 +335,24 @@ public final class UserConnection implements ProxiedPlayer
  
      public void connect(ServerInfo info, final Callback<Boolean> callback, final boolean retry, ServerConnectEvent.Reason reason)
      {
@@ -5740,7 +5740,7 @@ index 0e01e4c8..75f5bc20 100644
          if ( callback != null )
          {
              // Convert the Callback<Boolean> to be compatible with Callback<Result> from ServerConnectRequest.
-@@ -373,7 +397,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -376,7 +400,7 @@ public final class UserConnection implements ProxiedPlayer
                  callback.done( ServerConnectRequest.Result.ALREADY_CONNECTED, null );
              }
  
@@ -5749,7 +5749,7 @@ index 0e01e4c8..75f5bc20 100644
              return;
          }
          if ( pendingConnects.contains( target ) )
-@@ -383,7 +407,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -386,7 +410,7 @@ public final class UserConnection implements ProxiedPlayer
                  callback.done( ServerConnectRequest.Result.ALREADY_CONNECTING, null );
              }
  
@@ -5758,7 +5758,7 @@ index 0e01e4c8..75f5bc20 100644
              return;
          }
  
-@@ -407,14 +431,14 @@ public final class UserConnection implements ProxiedPlayer
+@@ -410,14 +434,14 @@ public final class UserConnection implements ProxiedPlayer
                      ServerInfo def = updateAndGetNextServer( target );
                      if ( request.isRetry() && def != null && ( getServer() == null || def != getServer().getInfo() ) )
                      {
@@ -5776,7 +5776,7 @@ index 0e01e4c8..75f5bc20 100644
                      }
                  } else
                  {
-@@ -423,7 +447,7 @@ public final class UserConnection implements ProxiedPlayer
+@@ -426,7 +450,7 @@ public final class UserConnection implements ProxiedPlayer
              }
          };
          Bootstrap b = new Bootstrap()
@@ -5785,7 +5785,7 @@ index 0e01e4c8..75f5bc20 100644
                  .group( ch.getHandle().eventLoop() )
                  .handler( bungee.unsafe().getBackendChannelInitializer().getChannelInitializer() )
                  .option( ChannelOption.CONNECT_TIMEOUT_MILLIS, request.getConnectTimeout() )
-@@ -438,7 +462,8 @@ public final class UserConnection implements ProxiedPlayer
+@@ -441,7 +465,8 @@ public final class UserConnection implements ProxiedPlayer
  
      private String connectionFailMessage(Throwable cause)
      {
@@ -5795,9 +5795,9 @@ index 0e01e4c8..75f5bc20 100644
      }
  
      @Override
-@@ -860,4 +885,10 @@ public final class UserConnection implements ProxiedPlayer
+@@ -875,4 +900,10 @@ public final class UserConnection implements ProxiedPlayer
  
-         unsafe.sendPacket( new ShowDialog( Either.right( dialog ) ) );
+         unsafe.sendPacket( new ServerLinks( links ) );
      }
 +
 +    // Waterfall start
@@ -7467,5 +7467,5 @@ index 6788fbe7..00000000
 -    }
 -}
 -- 
-2.45.2.windows.1
+2.50.1.windows.1
 
